@@ -1,0 +1,28 @@
+services:
+  terminal-gateway:
+    build: .
+    container_name: terminal-gateway
+    restart: unless-stopped
+    ports:
+      - "127.0.0.1:7681:7681"
+    volumes:
+      - /opt/stacks:/opt/stacks:ro
+      - /opt/minecraft/server/config:/opt/minecraft/server/config:ro
+      - ./data:/data
+    user: "10001:10001"
+    read_only: true
+    tmpfs:
+      - /tmp:size=8M,mode=1777
+    security_opt:
+      - no-new-privileges:true
+    cap_drop:
+      - ALL
+
+  cloudflared-quick:
+    image: cloudflare/cloudflared:latest
+    container_name: cloudflared-terminal
+    restart: unless-stopped
+    network_mode: host
+    command: tunnel --no-autoupdate --url http://127.0.0.1:7681
+    profiles:
+      - quick-tunnel

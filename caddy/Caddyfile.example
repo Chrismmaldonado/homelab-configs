@@ -1,0 +1,29 @@
+{
+	email admin@example.com
+}
+
+(cf) {
+	tls {
+		dns cloudflare {env.CF_API_TOKEN}
+	}
+	header {
+		Strict-Transport-Security max-age=31536000;
+		Referrer-Policy no-referrer
+	}
+}
+
+# Replace example.com with your domain. CF_API_TOKEN is set in Caddy's environment.
+homepage.example.com {
+	import cf
+	reverse_proxy 127.0.0.1:3001
+}
+
+adguard.example.com {
+	import cf
+	reverse_proxy 127.0.0.1:3000
+}
+
+uptime.example.com {
+	import cf
+	reverse_proxy 127.0.0.1:3002
+}
