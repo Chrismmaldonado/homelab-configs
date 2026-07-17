@@ -1,6 +1,6 @@
 ---
-# Homepage dashboard — single dense grid, everything on one screen.
-# Replace example.com and the LAN IP with yours.
+# Homepage dashboard — single dense grid.
+# One monitoring tile (Maintenant) instead of Kuma + Beszel + Dozzle.
 - Stacks:
     - AdGuard:
         href: https://adguard.example.com
@@ -20,24 +20,12 @@
         icon: caddy.png
         server: my-docker
         container: caddy
-    - Uptime Kuma:
-        href: https://uptime.example.com
-        description: Uptime
-        icon: uptime-kuma.png
+    - Maintenant:
+        href: https://monitor.example.com
+        description: Monitoring
+        icon: mdi-monitor-dashboard
         server: my-docker
-        container: uptime-kuma
-    - Beszel:
-        href: https://beszel.example.com
-        description: Metrics
-        icon: beszel.png
-        server: my-docker
-        container: beszel
-    - Dozzle:
-        href: https://logs.example.com
-        description: Logs
-        icon: dozzle.png
-        server: my-docker
-        container: dozzle
+        container: maintenant
     - Wazuh:
         href: https://wazuh.example.com
         description: SIEM

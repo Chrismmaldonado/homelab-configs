@@ -1,0 +1,49 @@
+# Maintenant — single monitoring stack.
+# Replaces Uptime Kuma (probes/status), Beszel (metrics), and Dozzle (logs).
+# Host networking so probes can use LAN DNS + localhost service ports.
+# Bound to 127.0.0.1:3020; Caddy fronts https://monitor.example.com
+services:
+  maintenant:
+    image: ghcr.io/kolapsis/maintenant:latest
+    container_name: maintenant
+    restart: unless-stopped
+    mem_limit: 512m
+    network_mode: host
+    read_only: true
+    security_opt:
+      - no-new-privileges:true
+    tmpfs:
+      - /tmp:noexec,nosuid,size=64m
+    volumes:
+      - /var/run/docker.sock:/var/run/docker.sock:ro
+      - /proc:/host/proc:ro
+      - maintenant-data:/data
+    environment:
+      MAINTENANT_ADDR: "127.0.0.1:3020"
+      MAINTENANT_DB: "/data/maintenant.db"
+      MAINTENANT_BASE_URL: "https://monitor.example.com"
+      MAINTENANT_STATUS_URL: "https://monitor.example.com/status"
+    labels:
+      # HTTP(S) uptime probes — tls-verify false where certs are quirky / self-signed
+      maintenant.endpoint.0.http: "https://home.example.com"
+      maintenant.endpoint.0.interval: "60s"
+      maintenant.endpoint.0.http.expected-status: "200,301,302"
+      maintenant.endpoint.1.http: "https://adguard.example.com"
+      maintenant.endpoint.1.interval: "60s"
+      maintenant.endpoint.1.http.expected-status: "200,301,302"
+      maintenant.endpoint.2.http: "https://paperless.example.com"
+      maintenant.endpoint.2.interval: "60s"
+      maintenant.endpoint.2.http.expected-status: "200,301,302"
+      maintenant.endpoint.2.http.tls-verify: "false"
+      maintenant.endpoint.3.http: "https://wazuh.example.com"
+      maintenant.endpoint.3.interval: "60s"
+      maintenant.endpoint.3.http.expected-status: "200,301,302"
+      maintenant.endpoint.3.http.tls-verify: "false"
+      # Nextcloud via localhost TCP (avoids redirect/DNS edge cases)
+      maintenant.endpoint.4.tcp: "127.0.0.1:8088"
+      maintenant.endpoint.4.interval: "60s"
+      # Minecraft Java port
+      maintenant.endpoint.5.tcp: "127.0.0.1:25565"
+      maintenant.endpoint.5.interval: "60s"
+volumes:
+  maintenant-data:

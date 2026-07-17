@@ -6,8 +6,8 @@ Homelab automation for the live portfolio and day-to-day operation.
 
 Runs on the homelab host (cron, every minute):
 
-1. Pulls Uptime Kuma public status page (`homelab` slug)
-2. Reads host CPU, RAM, disk from `/proc` (same machine Beszel monitors)
+1. Pulls Maintenant endpoint checks (`GET /api/v1/endpoints`)
+2. Reads host CPU, RAM, disk from `/proc`
 3. Merges deploy timestamp and incident note from local JSON files
 4. Queries the Minecraft server for live player count
 5. Writes `/opt/stacks/site/status.json`
@@ -15,30 +15,21 @@ Runs on the homelab host (cron, every minute):
 ## sync_site.sh
 
 1. Runs `fetch_status.py`
-2. Deploys to Cloudflare Pages when monitor state changes **or** every 10 minutes (so metrics refresh without spamming deploys)
+2. Deploys to Cloudflare Pages when monitor state changes **or** every 10 minutes
 
 ## autostart-all.sh
 
-Boot-time bring-up of every stack in dependency order (DNS → proxy → apps →
-security → SIEM). Installed as a systemd unit that runs after `docker.service`.
-The cloudflared quick tunnel is started without recreating it so its public
-URL doesn't rotate.
+Boot-time bring-up of every stack in dependency order. Installed as a systemd
+unit after `docker.service`. Starts Maintenant (not Kuma/Beszel/Dozzle).
 
 ## restic-backup.sh
 
-Nightly encrypted backup to a USB stick: stack configs, AdGuard config, cron,
-and a fresh Nextcloud Postgres dump. Retention is 7 daily / 4 weekly / 2
-monthly. The repo password is stored in a root-only file outside this repo.
+Nightly encrypted backup to USB: stack configs + Nextcloud Postgres dump.
 
 ## status-pages/refresh.sh
 
-Generates small static HTML status pages for services with no web UI (Caddy
-and CrowdSec). Caddy serves them read-only over TLS so the dashboard tiles
-have somewhere useful to link.
+Static HTML status pages for Caddy and CrowdSec (services with no admin UI).
 
 ---
 
-Adjust paths and sudo usage for your environment. **Do not** commit
-credentials; use host-local env files (`.env`, `.secrets`, `.cf.env`) kept
-outside deployed/site directories. All secrets in this repo are `${...}`
-placeholders.
+**Do not** commit credentials. Use host-local env files outside deploy paths.

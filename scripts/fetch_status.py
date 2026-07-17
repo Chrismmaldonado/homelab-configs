@@ -1,8 +1,10 @@
 #!/usr/bin/env python3
-"""Pull Uptime Kuma public status and host metrics; write status.json for the static site."""
+"""Pull Maintenant endpoint status + host metrics; write status.json for the static site."""
 import json
 import hashlib
 import shutil
+import socket
+import struct
 import time
 import urllib.request
 import pathlib
@@ -10,8 +12,18 @@ from datetime import datetime, timezone
 
 OUT = pathlib.Path("/opt/stacks/site/status.json")
 SITE = pathlib.Path("/opt/stacks/site")
-SLUG = "homelab"
-BASE = "http://127.0.0.1:3002"
+BASE = "http://127.0.0.1:3020"
+MC_HOST = "192.168.1.10"
+MC_PORT = 25565
+
+NAME_MAP = {
+    "home.example.com": "Homepage",
+    "adguard.example.com": "AdGuard",
+    "paperless.example.com": "Paperless",
+    "wazuh.example.com": "Wazuh",
+    "cloud.example.com": "Nextcloud",
+    "25565": "Fabric SMP",
+}
 
 
 def get(url):
@@ -96,7 +108,7 @@ def disk_stats():
 
 
 def host_resources():
-    data = {"source": "host /proc (same host Beszel monitors)"}
+    data = {"source": "host /proc (Maintenant for service probes)"}
     cpu = cpu_percent()
     if cpu is not None:
         data["cpuPct"] = cpu
@@ -105,22 +117,110 @@ def host_resources():
     return data or None
 
 
-cfg = get(f"{BASE}/api/status-page/{SLUG}")
-hb = get(f"{BASE}/api/status-page/heartbeat/{SLUG}")
-
-monitors = []
-for g in cfg.get("publicGroupList", []):
-    for m in g.get("monitorList", []):
-        beats = (hb.get("heartbeatList") or {}).get(str(m["id"])) or hb.get("heartbeatList", {}).get(m["id"]) or []
-        last = beats[-1] if beats else None
-        status = last["status"] if last else 2
-        uptime = None
-        for key, val in (hb.get("uptimeList") or {}).items():
-            if key.startswith(f"{m['id']}_"):
-                uptime = round(val * 100, 2)
+def mc_players(host=MC_HOST, port=MC_PORT, timeout=5):
+    def write_varint(value):
+        out = b""
+        while True:
+            temp = value & 0x7F
+            value >>= 7
+            if value:
+                temp |= 0x80
+            out += struct.pack("B", temp)
+            if not value:
                 break
-        monitors.append({"id": m["id"], "name": m["name"], "status": status, "uptime24": uptime})
+        return out
 
+    def read_varint(sock):
+        num, shift = 0, 0
+        while shift <= 35:
+            chunk = sock.recv(1)
+            if not chunk:
+                raise OSError("eof")
+            val = chunk[0]
+            num |= (val & 0x7F) << shift
+            if not (val & 0x80):
+                return num
+            shift += 7
+        raise ValueError("varint too long")
+
+    def write_string(text):
+        encoded = text.encode("utf-8")
+        return write_varint(len(encoded)) + encoded
+
+    def packet(packet_id, data=b""):
+        body = write_varint(packet_id) + data
+        return write_varint(len(body)) + body
+
+    try:
+        sock = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
+        sock.settimeout(timeout)
+        sock.connect((host, port))
+        handshake = packet(
+            0,
+            write_varint(767) + write_string(host) + struct.pack(">H", port) + write_varint(1),
+        )
+        sock.sendall(handshake)
+        sock.sendall(packet(0))
+        read_varint(sock)
+        read_varint(sock)
+        payload_len = read_varint(sock)
+        payload = b""
+        while len(payload) < payload_len:
+            chunk = sock.recv(min(4096, payload_len - len(payload)))
+            if not chunk:
+                break
+            payload += chunk
+        sock.close()
+        if not payload:
+            return None
+        data = json.loads(payload.decode("utf-8"))
+        players = data.get("players") or {}
+        return {
+            "playersOnline": int(players.get("online", 0)),
+            "playersMax": int(players.get("max", 0)),
+        }
+    except (OSError, ValueError, json.JSONDecodeError, struct.error, KeyError, TypeError):
+        return None
+
+
+def endpoint_name(target):
+    t = target or ""
+    if t.endswith(":8088") or ":8088" in t:
+        return "Nextcloud"
+    for key, name in NAME_MAP.items():
+        if key in t:
+            return name
+    return t or "unknown"
+
+
+
+
+def maintenant_monitors():
+    data = get(f"{BASE}/api/v1/endpoints")
+    monitors = []
+    for i, ep in enumerate([e for e in (data.get("endpoints") or []) if e.get("active", True)]):
+        target = ep.get("target") or ""
+        up = (ep.get("status") or "").lower() == "up"
+        entry = {
+            "id": i + 1,
+            "name": endpoint_name(target),
+            "status": 1 if up else 0,
+            "uptime24": None,
+            "target": target,
+            "responseMs": ep.get("last_response_time_ms"),
+        }
+        if "25565" in target and up:
+            players = mc_players()
+            if players:
+                entry.update(players)
+        monitors.append(entry)
+    # Stable display order
+    order = ["Homepage", "AdGuard", "Paperless", "Wazuh", "Nextcloud", "Fabric SMP"]
+    monitors.sort(key=lambda m: order.index(m["name"]) if m["name"] in order else 99)
+    return monitors
+
+
+monitors = maintenant_monitors()
 up = sum(1 for m in monitors if m["status"] == 1)
 
 deploy = read_json(SITE / ".deploy.json") or {}
@@ -137,10 +237,11 @@ reliability = {
 resources = host_resources()
 
 payload = {
-    "overall": "all systems operational" if up == len(monitors) else f"{up}/{len(monitors)} operational",
-    "allUp": up == len(monitors),
+    "overall": "all systems operational" if up == len(monitors) and monitors else f"{up}/{len(monitors)} operational",
+    "allUp": bool(monitors) and up == len(monitors),
     "monitors": monitors,
     "reliability": reliability,
+    "source": "maintenant",
 }
 if resources:
     payload["hostResources"] = resources
@@ -148,5 +249,8 @@ if resources:
 new = json.dumps(payload, separators=(",", ":"))
 old = OUT.read_text() if OUT.exists() else ""
 OUT.write_text(new + "\n")
-print("written", OUT, "monitors", len(monitors), "cpu", resources.get("cpuPct") if resources else None)
-print("changed", hashlib.sha256(new.encode()).hexdigest() != hashlib.sha256(old.strip().encode()).hexdigest())
+print("written", OUT, "monitors", len(monitors), "up", up)
+print(
+    "changed",
+    hashlib.sha256(new.encode()).hexdigest() != hashlib.sha256(old.strip().encode()).hexdigest(),
+)

@@ -27,7 +27,7 @@ up() {
   fi
 }
 
-up /opt/stacks                                          # uptime-kuma, adguard, beszel(+agent), dozzle, homepage
+up /opt/stacks                                          # adguard, homepage
 up /opt/stacks/proxy                                    # caddy (reverse proxy / TLS)
 up /opt/stacks/searxng                                  # searxng
 up /opt/stacks/terminal-gateway                         # terminal-gateway (read-only public shell)
@@ -35,22 +35,27 @@ up /opt/stacks/terminal-gateway                         # terminal-gateway (read
 # (recreating rotates the public trycloudflare URL). Restart policy also covers it.
 echo "--- starting cloudflared-terminal (no recreate) ---"
 docker start cloudflared-terminal 2>&1 || echo "cloudflared-terminal not present yet"
+up /opt/visitor-intel                                   # visitor-intel + cloudflared-ingest
+# /opt/stacks/privacy/gluetun intentionally NOT started (inactive VPN egress).
 
 echo "--- final container state ---"
 docker ps --format '{{.Names}}: {{.Status}}'
 echo "=== $(date -Is) homelab-autostart done ==="
 
-# lite: unbound recursive DNS
+# lite: unbound + vaultwarden
 cd /opt/stacks/lite && docker compose up -d
 
 # paperless-ngx
 cd /opt/stacks/paperless && docker compose up -d
 
+# maintenant (all-in-one monitoring)
+cd /opt/stacks/maintenant && docker compose up -d
+
 # crowdsec IDS
 cd /opt/stacks/crowdsec && docker compose up -d
 
-# nextcloud (local volumes; restic -> USB). Secrets via host-local env file.
+# nextcloud (local volumes; restic -> USB)
 cd /opt/stacks/nextcloud && docker compose --env-file /opt/stacks/.secrets up -d
 
-# wazuh single-node SIEM
+# wazuh
 cd /opt/stacks/wazuh/single-node && docker compose up -d
