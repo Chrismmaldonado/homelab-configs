@@ -1,0 +1,106 @@
+# Paperless-ngx: document OCR + archive with Postgres, Redis, Tika & Gotenberg.
+# All secrets are placeholders — supply real values via a host-local .env file.
+name: paperless
+
+x-logging: &logging
+  driver: json-file
+  options:
+    max-size: "5m"
+    max-file: "2"
+
+services:
+  broker:
+    image: redis:8-alpine
+    container_name: paperless-redis
+    restart: unless-stopped
+    mem_limit: 128m
+    mem_reservation: 32m
+    cpus: "0.25"
+    volumes:
+      - redisdata:/data
+    logging: *logging
+
+  db:
+    image: postgres:16-alpine
+    container_name: paperless-db
+    restart: unless-stopped
+    mem_limit: 512m
+    mem_reservation: 128m
+    cpus: "0.50"
+    environment:
+      POSTGRES_DB: paperless
+      POSTGRES_USER: paperless
+      POSTGRES_PASSWORD: ${PAPERLESS_DB_PASSWORD}
+    volumes:
+      - pgdata:/var/lib/postgresql/data
+    logging: *logging
+
+  webserver:
+    image: ghcr.io/paperless-ngx/paperless-ngx:latest
+    container_name: paperless
+    restart: unless-stopped
+    depends_on:
+      - db
+      - broker
+      - gotenberg
+      - tika
+    mem_limit: 1280m
+    mem_reservation: 512m
+    cpus: "1.5"
+    ports:
+      - "127.0.0.1:8010:8000"
+    volumes:
+      - ./data:/usr/src/paperless/data
+      - ./media:/usr/src/paperless/media
+      - ./export:/usr/src/paperless/export
+      - ./consume:/usr/src/paperless/consume
+    environment:
+      PAPERLESS_REDIS: redis://broker:6379
+      PAPERLESS_DBHOST: db
+      PAPERLESS_DBNAME: paperless
+      PAPERLESS_DBUSER: paperless
+      PAPERLESS_DBPASS: ${PAPERLESS_DB_PASSWORD}
+      PAPERLESS_SECRET_KEY: ${PAPERLESS_SECRET_KEY}
+      PAPERLESS_URL: https://paperless.example.com
+      PAPERLESS_CSRF_TRUSTED_ORIGINS: https://paperless.example.com
+      PAPERLESS_ALLOWED_HOSTS: paperless.example.com,localhost,127.0.0.1
+      PAPERLESS_OCR_LANGUAGE: eng
+      PAPERLESS_TIKA_ENABLED: "1"
+      PAPERLESS_TIKA_GOTENBERG_ENDPOINT: http://gotenberg:3000
+      PAPERLESS_TIKA_ENDPOINT: http://tika:9998
+      PAPERLESS_TIME_ZONE: America/Chicago
+      PAPERLESS_ADMIN_USER: ${PAPERLESS_ADMIN_USER}
+      PAPERLESS_ADMIN_PASSWORD: ${PAPERLESS_ADMIN_PASSWORD}
+      PAPERLESS_OCR_USER_ARGS: '{"invalidate_digital_signatures": true}'
+      PAPERLESS_OCR_OUTPUT_TYPE: pdf
+      PAPERLESS_OCR_SKIP_ARCHIVE_FILE: with_text
+      # Mail rules are configured in the UI; these keep the consume folder sane.
+      PAPERLESS_CONSUMER_DELETE_DUPLICATES: "true"
+      PAPERLESS_FILENAME_FORMAT: "{created_year}/{correspondent}/{title}"
+    logging: *logging
+
+  gotenberg:
+    image: gotenberg/gotenberg:8
+    container_name: paperless-gotenberg
+    restart: unless-stopped
+    mem_limit: 768m
+    mem_reservation: 128m
+    cpus: "0.75"
+    command:
+      - "gotenberg"
+      - "--chromium-disable-javascript=true"
+      - "--chromium-allow-list=file:///tmp/.*"
+    logging: *logging
+
+  tika:
+    image: apache/tika:latest
+    container_name: paperless-tika
+    restart: unless-stopped
+    mem_limit: 768m
+    mem_reservation: 128m
+    cpus: "0.50"
+    logging: *logging
+
+volumes:
+  redisdata:
+  pgdata:

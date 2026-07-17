@@ -1,0 +1,19 @@
+# Resource + port overrides for the official wazuh-docker single-node compose.
+# Clone https://github.com/wazuh/wazuh-docker (single-node) and drop this
+# override alongside it. Caps keep the SIEM co-resident with other stacks;
+# 1514/1515 are exposed on the LAN IP so remote agents (e.g. Windows) enroll.
+services:
+  wazuh.indexer:
+    mem_limit: "1800m"
+    mem_reservation: "1g"
+    environment:
+      OPENSEARCH_JAVA_OPTS: "-Xms768m -Xmx768m"
+  wazuh.manager:
+    mem_limit: "1400m"
+    ports:
+      - "192.168.1.10:1514:1514"   # agent events (replace with your LAN IP)
+      - "192.168.1.10:1515:1515"   # agent enrollment
+      - "127.0.0.1:514:514/udp"
+      - "127.0.0.1:55000:55000"
+  wazuh.dashboard:
+    mem_limit: "700m"

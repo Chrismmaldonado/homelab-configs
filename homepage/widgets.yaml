@@ -1,0 +1,10 @@
+---
+- resources:
+    cpu: true
+    memory: true
+    disk: /
+    label: host
+- search:
+    provider: custom
+    url: https://search.example.com/search?q=
+    target: _blank

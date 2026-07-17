@@ -1,0 +1,14 @@
+---
+title: Homelab
+description: Local stack dashboard
+theme: dark
+color: slate
+headerStyle: clean
+hideVersion: true
+statusStyle: "dot"
+cardBlur: sm
+useEqualHeights: false
+layout:
+  Stacks:
+    style: row
+    columns: 5

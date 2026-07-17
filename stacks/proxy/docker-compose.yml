@@ -1,0 +1,21 @@
+# Caddy reverse proxy + automatic TLS (DNS-01 via Cloudflare).
+# CF_API_TOKEN comes from a host-local env file (never commit it).
+# See ../../caddy/Caddyfile.example for the site config.
+services:
+  caddy:
+    build: ./caddy
+    container_name: caddy
+    restart: unless-stopped
+    network_mode: host
+    environment:
+      - CF_API_TOKEN=${CF_API_TOKEN}
+    volumes:
+      - ./Caddyfile:/etc/caddy/Caddyfile:ro
+      - /opt/stacks/site:/srv/site:ro
+      - /opt/stacks/status-pages:/srv/status:ro
+      - /var/log/caddy:/var/log/caddy
+      - caddy_data:/data
+      - caddy_config:/config
+volumes:
+  caddy_data:
+  caddy_config:

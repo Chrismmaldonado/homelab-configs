@@ -1,0 +1,64 @@
+---
+# Homepage dashboard — single dense grid, everything on one screen.
+# Replace example.com and the LAN IP with yours.
+- Stacks:
+    - AdGuard:
+        href: https://adguard.example.com
+        description: DNS
+        icon: adguard-home.png
+        server: my-docker
+        container: adguard
+    - SearXNG:
+        href: https://search.example.com
+        description: Search
+        icon: searxng.png
+        server: my-docker
+        container: searxng
+    - Caddy:
+        href: https://proxy.example.com
+        description: Reverse proxy · TLS
+        icon: caddy.png
+        server: my-docker
+        container: caddy
+    - Uptime Kuma:
+        href: https://uptime.example.com
+        description: Uptime
+        icon: uptime-kuma.png
+        server: my-docker
+        container: uptime-kuma
+    - Beszel:
+        href: https://beszel.example.com
+        description: Metrics
+        icon: beszel.png
+        server: my-docker
+        container: beszel
+    - Dozzle:
+        href: https://logs.example.com
+        description: Logs
+        icon: dozzle.png
+        server: my-docker
+        container: dozzle
+    - Wazuh:
+        href: https://wazuh.example.com
+        description: SIEM
+        icon: mdi-shield-search
+        server: my-docker
+        container: single-node-wazuh.dashboard-1
+    - Paperless:
+        href: https://paperless.example.com
+        description: Docs
+        icon: paperless-ngx.png
+        server: my-docker
+        container: paperless
+    - Nextcloud:
+        href: https://cloud.example.com
+        description: Personal files
+        icon: nextcloud.png
+        server: my-docker
+        container: nextcloud
+    - CrowdSec:
+        href: https://crowdsec.example.com
+        description: IDS · auto IP bans
+        icon: mdi-shield-account
+        server: my-docker
+        container: crowdsec
