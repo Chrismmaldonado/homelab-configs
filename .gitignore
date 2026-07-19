@@ -3,3 +3,11 @@ do-push.sh
 fix-history.sh
 PUSH.md
 fix-history.sh
+
+# local backups and logs
+*.bak
+*.bak-*
+*.bak.*
+homepage/logs/
+**/*.log
+
