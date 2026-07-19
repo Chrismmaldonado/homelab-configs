@@ -1,5 +1,3 @@
-# Core stack: DNS blocking + LAN dashboard.
-# Monitoring lives in stacks/maintenant/ (replaces Uptime Kuma + Beszel + Dozzle).
 services:
   adguard:
     image: adguard/adguardhome:latest
@@ -15,9 +13,9 @@ services:
     container_name: homepage
     restart: unless-stopped
     ports:
-      - "3001:3000"
+      - "127.0.0.1:3001:3000"
     environment:
-      - HOMEPAGE_ALLOWED_HOSTS=192.168.1.10:3001,localhost:3001,home.example.com
+      - HOMEPAGE_ALLOWED_HOSTS=192.168.1.213:3001,localhost:3001,100.112.109.117:3001,home.dobasmp.net
     volumes:
       - /opt/stacks/homepage/config:/app/config
       - /var/run/docker.sock:/var/run/docker.sock:ro

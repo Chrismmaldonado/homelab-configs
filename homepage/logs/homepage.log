@@ -1,0 +1,31 @@
+[2026-06-28T14:01:47.825Z] info: kubernetes.yaml was copied to the config folder
+[2026-06-28T14:34:05.852Z] info: proxmox.yaml was copied to the config folder
+[2026-06-28T14:34:05.864Z] info: custom.css was copied to the config folder
+[2026-06-28T14:34:05.864Z] info: custom.js was copied to the config folder
+[2026-06-28T15:57:23.250Z] error: Host validation failed for: 127.0.0.1:3001. Hint: Set the HOMEPAGE_ALLOWED_HOSTS environment variable to allow requests from this host / port.
+[2026-06-28T15:57:23.277Z] error: Host validation failed for: 127.0.0.1:3001. Hint: Set the HOMEPAGE_ALLOWED_HOSTS environment variable to allow requests from this host / port.
+[2026-06-28T15:57:23.318Z] error: Host validation failed for: 127.0.0.1:3001. Hint: Set the HOMEPAGE_ALLOWED_HOSTS environment variable to allow requests from this host / port.
+[2026-06-28T17:31:46.973Z] info: custom.css was copied to the config folder
+[2026-06-28T17:31:46.976Z] info: custom.js was copied to the config folder
+[2026-06-29T15:46:01.585Z] error: Host validation failed for: home.dobasmp.net. Hint: Set the HOMEPAGE_ALLOWED_HOSTS environment variable to allow requests from this host / port.
+[2026-06-29T15:46:03.571Z] error: Host validation failed for: home.dobasmp.net. Hint: Set the HOMEPAGE_ALLOWED_HOSTS environment variable to allow requests from this host / port.
+[2026-06-29T15:46:03.578Z] error: Host validation failed for: home.dobasmp.net. Hint: Set the HOMEPAGE_ALLOWED_HOSTS environment variable to allow requests from this host / port.
+[2026-06-29T15:46:03.582Z] error: Host validation failed for: home.dobasmp.net. Hint: Set the HOMEPAGE_ALLOWED_HOSTS environment variable to allow requests from this host / port.
+[2026-06-29T15:46:03.585Z] error: Host validation failed for: home.dobasmp.net. Hint: Set the HOMEPAGE_ALLOWED_HOSTS environment variable to allow requests from this host / port.
+[2026-06-29T15:46:03.588Z] error: Host validation failed for: home.dobasmp.net. Hint: Set the HOMEPAGE_ALLOWED_HOSTS environment variable to allow requests from this host / port.
+[2026-06-29T15:46:03.591Z] error: Host validation failed for: home.dobasmp.net. Hint: Set the HOMEPAGE_ALLOWED_HOSTS environment variable to allow requests from this host / port.
+[2026-06-29T15:46:03.596Z] error: Host validation failed for: home.dobasmp.net. Hint: Set the HOMEPAGE_ALLOWED_HOSTS environment variable to allow requests from this host / port.
+[2026-06-29T15:46:03.600Z] error: Host validation failed for: home.dobasmp.net. Hint: Set the HOMEPAGE_ALLOWED_HOSTS environment variable to allow requests from this host / port.
+[2026-06-29T15:46:03.606Z] error: Host validation failed for: home.dobasmp.net. Hint: Set the HOMEPAGE_ALLOWED_HOSTS environment variable to allow requests from this host / port.
+[2026-06-29T15:46:03.611Z] error: Host validation failed for: home.dobasmp.net. Hint: Set the HOMEPAGE_ALLOWED_HOSTS environment variable to allow requests from this host / port.
+[2026-06-29T15:46:03.614Z] error: Host validation failed for: home.dobasmp.net. Hint: Set the HOMEPAGE_ALLOWED_HOSTS environment variable to allow requests from this host / port.
+[2026-06-29T15:46:03.622Z] error: Host validation failed for: home.dobasmp.net. Hint: Set the HOMEPAGE_ALLOWED_HOSTS environment variable to allow requests from this host / port.
+[2026-06-29T15:46:03.625Z] error: Host validation failed for: home.dobasmp.net. Hint: Set the HOMEPAGE_ALLOWED_HOSTS environment variable to allow requests from this host / port.
+[2026-06-29T15:46:03.635Z] error: Host validation failed for: home.dobasmp.net. Hint: Set the HOMEPAGE_ALLOWED_HOSTS environment variable to allow requests from this host / port.
+[2026-06-29T15:46:03.647Z] error: Host validation failed for: home.dobasmp.net. Hint: Set the HOMEPAGE_ALLOWED_HOSTS environment variable to allow requests from this host / port.
+[2026-06-29T15:46:37.453Z] error: Host validation failed for: home.dobasmp.net. Hint: Set the HOMEPAGE_ALLOWED_HOSTS environment variable to allow requests from this host / port.
+[2026-06-29T15:46:37.458Z] error: Host validation failed for: home.dobasmp.net. Hint: Set the HOMEPAGE_ALLOWED_HOSTS environment variable to allow requests from this host / port.
+[2026-06-29T15:46:37.464Z] error: Host validation failed for: home.dobasmp.net. Hint: Set the HOMEPAGE_ALLOWED_HOSTS environment variable to allow requests from this host / port.
+[2026-07-16T13:00:27.745Z] error: Host validation failed for: 127.0.0.1:3001. Hint: Set the HOMEPAGE_ALLOWED_HOSTS environment variable to allow requests from this host / port.
+[2026-07-16T13:00:34.501Z] error: Host validation failed for: 127.0.0.1:3001. Hint: Set the HOMEPAGE_ALLOWED_HOSTS environment variable to allow requests from this host / port.
+[2026-07-16T13:00:34.510Z] error: Host validation failed for: 127.0.0.1:3001. Hint: Set the HOMEPAGE_ALLOWED_HOSTS environment variable to allow requests from this host / port.

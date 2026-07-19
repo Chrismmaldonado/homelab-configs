@@ -1,0 +1,50 @@
+services:
+  opencanary:
+    image: thinkst/opencanary:latest
+    container_name: opencanary
+    restart: unless-stopped
+    command: ["--dev", "--uid=nobody", "--gid=nogroup"]
+    mem_limit: 256m
+    security_opt:
+      - no-new-privileges:true
+    volumes:
+      - ./opencanary.conf:/etc/opencanaryd/opencanary.conf:ro
+      - ./logs:/var/tmp
+    ports:
+      - "192.168.1.213:2222:2222"
+      - "192.168.1.213:2121:2121"
+      - "192.168.1.213:2323:2323"
+      - "192.168.1.213:3306:3306"
+      - "192.168.1.213:3389:3389"
+      - "192.168.1.213:5900:5900"
+      - "192.168.1.213:6379:6379"
+      - "192.168.1.213:8081:8081"
+    networks:
+      - canary
+
+  canary-alerter:
+    image: python:3.12-alpine
+    container_name: canary-alerter
+    restart: unless-stopped
+    network_mode: host
+    mem_limit: 64m
+    security_opt:
+      - no-new-privileges:true
+    read_only: true
+    tmpfs:
+      - /tmp:size=8m
+    volumes:
+      - ./bin/alerter.py:/alerter.py:ro
+      - /opt/stacks/ntfy/secrets.env:/secrets.env:ro
+    environment:
+      ALERTER_HOST: "172.17.0.1"
+      ALERTER_PORT: "9055"
+      NTFY_SECRETS: "/secrets.env"
+      IGNORE_SRC: "127.0.0.1,::1"
+      IGNORE_LOGTYPES: "1001"
+      ALERT_COOLDOWN_SEC: "60"
+    command: ["python", "/alerter.py"]
+
+networks:
+  canary:
+    driver: bridge

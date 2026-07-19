@@ -1,52 +1,72 @@
 ---
-# Homepage dashboard — single dense grid.
-# One monitoring tile (Maintenant) instead of Kuma + Beszel + Dozzle.
-- Stacks:
-    - AdGuard:
-        href: https://adguard.example.com
-        description: DNS
-        icon: adguard-home.png
-        server: my-docker
-        container: adguard
-    - SearXNG:
-        href: https://search.example.com
-        description: Search
-        icon: searxng.png
-        server: my-docker
-        container: searxng
-    - Caddy:
-        href: https://proxy.example.com
-        description: Reverse proxy · TLS
-        icon: caddy.png
-        server: my-docker
-        container: caddy
+- Administration:
     - Maintenant:
-        href: https://monitor.example.com
-        description: Monitoring
+        href: https://monitor.dobasmp.net
+        description: Uptime, metrics, and logs
         icon: mdi-monitor-dashboard
         server: my-docker
         container: maintenant
     - Wazuh:
-        href: https://wazuh.example.com
-        description: SIEM
+        href: https://wazuh.dobasmp.net
+        description: Endpoint security and SIEM
         icon: mdi-shield-search
         server: my-docker
         container: single-node-wazuh.dashboard-1
-    - Paperless:
-        href: https://paperless.example.com
-        description: Docs
-        icon: paperless-ngx.png
+    - Visitors:
+        href: http://192.168.1.213:8787/dash
+        description: Portfolio traffic
+        icon: mdi-account-eye
+
+- Daily Use:
+    - SearXNG:
+        href: https://search.dobasmp.net
+        description: Private search
+        icon: searxng.png
         server: my-docker
-        container: paperless
+        container: searxng
     - Nextcloud:
-        href: https://cloud.example.com
-        description: Personal files
+        href: https://cloud.dobasmp.net
+        description: Files and sync
         icon: nextcloud.png
         server: my-docker
         container: nextcloud
+    - Paperless:
+        href: https://paperless.dobasmp.net
+        description: Document archive
+        icon: paperless-ngx.png
+        server: my-docker
+        container: paperless
+    - Minecraft:
+        href: https://map.dobasmp.net
+        description: DoBASMP server
+        icon: minecraft.png
+    - BlueMap:
+        href: https://map.dobasmp.net
+        description: Live world map
+        icon: mdi-map
+
+- Background Services:
+    - AdGuard:
+        href: https://adguard.dobasmp.net
+        description: DNS and filtering
+        icon: adguard-home.png
+        server: my-docker
+        container: adguard
+    - Caddy:
+        href: https://proxy.dobasmp.net
+        description: Reverse proxy and TLS
+        icon: caddy.png
+        server: my-docker
+        container: caddy
+    - OpenCanary:
+        href: https://monitor.dobasmp.net
+        description: LAN honeypot alerts
+        icon: mdi-radar
+        server: my-docker
+        container: opencanary
     - CrowdSec:
-        href: https://crowdsec.example.com
-        description: IDS · auto IP bans
+        href: https://crowdsec.dobasmp.net
+        description: Intrusion detection and bans
         icon: mdi-shield-account
         server: my-docker
         container: crowdsec

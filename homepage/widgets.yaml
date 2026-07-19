@@ -1,10 +1,28 @@
 ---
 - resources:
+    label: HOMELAB2
     cpu: true
     memory: true
     disk: /
-    label: host
+    cputemp: true
+    uptime: true
+    units: imperial
+- datetime:
+    text_size: xl
+    format:
+      dateStyle: medium
+      timeStyle: short
+      hour12: true
+- openmeteo:
+    label: Radcliffe, IA
+    latitude: 42.3177
+    longitude: -93.4343
+    timezone: America/Chicago
+    units: imperial
+    cache: 5
 - search:
     provider: custom
-    url: https://search.example.com/search?q=
+    url: https://search.dobasmp.net/search?q=
     target: _blank
+    focus: false
+    showSearchSuggestions: true

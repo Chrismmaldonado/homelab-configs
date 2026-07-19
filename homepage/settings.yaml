@@ -1,14 +1,26 @@
 ---
 title: Homelab
-description: Local stack dashboard
+description: Local services
+favicon: https://cdn.jsdelivr.net/gh/walkxcode/dashboard-icons/png/homepage.png
 theme: dark
 color: slate
 headerStyle: clean
 hideVersion: true
-statusStyle: "dot"
+statusStyle: dot
 cardBlur: sm
-useEqualHeights: false
+useEqualHeights: true
+target: _self
+quicklaunch:
+  searchDescriptions: true
+  hideInternetSearch: false
+  showSearchSuggestions: true
 layout:
-  Stacks:
+  Administration:
     style: row
-    columns: 5
+    columns: 1
+  Daily Use:
+    style: row
+    columns: 1
+  Background Services:
+    style: row
+    columns: 1

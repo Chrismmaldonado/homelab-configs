@@ -48,14 +48,15 @@ cd /opt/stacks/lite && docker compose up -d
 # paperless-ngx
 cd /opt/stacks/paperless && docker compose up -d
 
-# maintenant (all-in-one monitoring)
 cd /opt/stacks/maintenant && docker compose up -d
 
 # crowdsec IDS
+cd /opt/stacks/opencanary && docker compose up -d
+
 cd /opt/stacks/crowdsec && docker compose up -d
 
 # nextcloud (local volumes; restic -> USB)
-cd /opt/stacks/nextcloud && docker compose --env-file /opt/stacks/.secrets up -d
+cd /opt/stacks/nextcloud && docker compose --env-file /opt/stacks/.expand.secrets up -d
 
 # wazuh
 cd /opt/stacks/wazuh/single-node && docker compose up -d

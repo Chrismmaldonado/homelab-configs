@@ -11,8 +11,7 @@ Reference configs and automation for my **bare-metal homelab portfolio**.
 
 ## Why this repo exists
 
-The [portfolio site](https://christopher.isageek.net) shows **live** status, architecture, and a read-only terminal. This repo is the proof behind it: how the stacks are wired, how status syncs to Cloudflare Pages, how the public terminal is locked down, and how the box defends and backs itself up.
-
+The [portfolio site](https://christopher.isageek.net) shows **live** status, architecture, and a read-only terminal. 
 For **sysadmin / infrastructure / security** hiring, it answers: *Can this person document, automate, secure, and ship safely — not just install Docker once?*
 
 ---
@@ -56,7 +55,7 @@ flowchart LR
 |-------|---------|
 | **AdGuard Home + Unbound** | Network-wide DNS blocking + recursive resolver (DoH/DoT/DoQ) |
 | **Caddy** | Reverse proxy + automatic TLS (Let's Encrypt DNS-01) |
-| **Maintenant** | All-in-one monitoring (uptime + metrics + logs + status) |
+| **Maintenant** | Monitoring (uptime, metrics, logs, status) |
 | **CrowdSec** | Intrusion detection + automatic firewall bans |
 | **Wazuh** | SIEM / security monitoring (host + Windows agent) |
 | **Nextcloud** | Self-hosted personal file sync & share |
@@ -67,7 +66,6 @@ flowchart LR
 | **terminal-gateway** | Read-only public WebSocket shell |
 | **Restic** | Encrypted nightly backups to USB |
 
-> **Not in the stack anymore:** Uptime Kuma, Beszel, and Dozzle — replaced by Maintenant so monitoring isn’t three overlapping tools.
 
 ---
 
@@ -120,7 +118,6 @@ cd stacks/core && docker compose up -d
 # Reverse proxy (edit caddy/Caddyfile.example first)
 cd stacks/proxy && docker compose up -d
 
-# One monitoring tool
 cd stacks/maintenant && docker compose up -d
 
 # Security
@@ -137,7 +134,7 @@ sudo python3 scripts/fetch_status.py
 
 ## Hardware context
 
-Dell OptiPlex 5040 SFF — Intel Core i7-6700 (4C/8T), 32 GB RAM, 512 GB SSD + 16 GB USB backup, Ubuntu 26.04 LTS. Runs ~20+ containers with per-service memory caps alongside a modded Minecraft server — constraint-driven homelab, not a datacenter flex.
+Dell OptiPlex 5040 SFF — Intel Core i7-6700 (4C/8T), 32 GB RAM, 512 GB SSD + 16 GB USB backup, Ubuntu 26.04 LTS. Runs ~20+ containers with per-service memory caps alongside a modded Minecraft server — 
 
 ---
 

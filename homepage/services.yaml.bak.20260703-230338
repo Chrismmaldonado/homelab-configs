@@ -1,0 +1,69 @@
+- Infrastructure:
+    - AdGuard Home:
+        href: https://adguard.dobasmp.net
+        description: Network-wide DNS ad blocking
+        icon: adguard-home.png
+        server: my-docker
+        container: adguard
+    - SearXNG:
+        href: https://search.dobasmp.net
+        description: Private, untracked metasearch engine
+        icon: searxng.png
+        server: my-docker
+        container: searxng
+- Monitoring:
+    - Uptime Kuma:
+        href: https://uptime.dobasmp.net
+        description: Uptime monitoring + alerts
+        icon: uptime-kuma.png
+        server: my-docker
+        container: uptime-kuma
+    - Beszel:
+        href: https://beszel.dobasmp.net
+        description: Server metrics history
+        icon: beszel.png
+        server: my-docker
+        container: beszel
+    - Dozzle:
+        href: https://logs.dobasmp.net
+        description: Live container logs
+        icon: dozzle.png
+        server: my-docker
+        container: dozzle
+    - Speedtest Tracker:
+        href: https://speed.dobasmp.net
+        description: ISP speed history
+        icon: speedtest-tracker.png
+        server: my-docker
+        container: speedtest-tracker
+- Personal:
+    - Site Visitors:
+        href: http://192.168.1.213:8787/dash
+        description: christopher.isageek.net visitor log (LAN only)
+        icon: mdi-account-eye.png
+        widget:
+          type: customapi
+          url: http://192.168.1.213:8787/api/summary
+          refreshInterval: 30000
+          mappings:
+            - field: total
+              label: Total visits
+              format: number
+            - field: unique_today
+              label: Unique today
+              format: number
+            - field: last_location
+              label: Last from
+              format: text
+            - field: last_device
+              label: Last device
+              format: text
+- Game Servers:
+    - Minecraft - The Boys:
+        href: https://playit.gg
+        description: Fabric 1.21 via playit (dobasmp.net)
+        icon: minecraft.png
+    - BlueMap - World Map:
+        href: https://map.dobasmp.net
+        description: Live 3D map of The Boys world
+        icon: bluemap.png

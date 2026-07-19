@@ -13,15 +13,15 @@ from datetime import datetime, timezone
 OUT = pathlib.Path("/opt/stacks/site/status.json")
 SITE = pathlib.Path("/opt/stacks/site")
 BASE = "http://127.0.0.1:3020"
-MC_HOST = "192.168.1.10"
+MC_HOST = "192.168.1.213"
 MC_PORT = 25565
 
 NAME_MAP = {
-    "home.example.com": "Homepage",
-    "adguard.example.com": "AdGuard",
-    "paperless.example.com": "Paperless",
-    "wazuh.example.com": "Wazuh",
-    "cloud.example.com": "Nextcloud",
+    "home.dobasmp.net": "Homepage",
+    "adguard.dobasmp.net": "AdGuard",
+    "paperless.dobasmp.net": "Paperless",
+    "wazuh.dobasmp.net": "Wazuh",
+    "cloud.dobasmp.net": "Nextcloud",
     "25565": "Fabric SMP",
 }
 

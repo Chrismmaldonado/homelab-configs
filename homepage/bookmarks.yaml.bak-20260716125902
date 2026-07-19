@@ -1,0 +1,7 @@
+- Admin:
+    - AdGuard:
+        - abbr: AG
+          href: http://192.168.1.213:3000
+    - Homepage:
+        - abbr: HP
+          href: http://192.168.1.213:3001

@@ -1,8 +1,5 @@
-# Caddy reverse proxy for the homelab.
-# TLS via Cloudflare DNS-01 (CF_API_TOKEN in Caddy's environment).
-# Replace example.com with your domain. Access log feeds CrowdSec.
 {
-	email admin@example.com
+	email admin@dobasmp.net
 	log {
 		output file /var/log/caddy/access.log {
 			roll_size 20mb
@@ -22,46 +19,50 @@
 	}
 }
 
-home.example.com {
+home.dobasmp.net {
 	import cf
 	reverse_proxy 127.0.0.1:3001
 }
-
-adguard.example.com {
+adguard.dobasmp.net {
 	import cf
 	reverse_proxy 127.0.0.1:3000
 }
-
-search.example.com {
+map.dobasmp.net {
+	import cf
+	reverse_proxy 127.0.0.1:8100
+}
+dns.dobasmp.net {
+	import cf
+	handle /dns-query* {
+		reverse_proxy https://127.0.0.1:8443 {
+			transport http {
+				tls_server_name dns.dobasmp.net
+			}
+		}
+	}
+	handle {
+		respond "DoH endpoint. Use /dns-query" 200
+	}
+}
+search.dobasmp.net {
 	import cf
 	reverse_proxy 127.0.0.1:3006
 }
 
-ntfy.example.com {
+
+ntfy.dobasmp.net {
 	import cf
 	reverse_proxy 127.0.0.1:3007
 }
 
-paperless.example.com {
+
+paperless.dobasmp.net {
 	import cf
 	encode gzip
 	reverse_proxy 127.0.0.1:8010
 }
 
-cloud.example.com {
-	import cf
-	encode gzip
-	reverse_proxy 127.0.0.1:8088
-}
-
-# Single monitoring UI (Maintenant) — uptime, metrics, logs, status page
-monitor.example.com {
-	import cf
-	encode gzip
-	reverse_proxy 127.0.0.1:3020
-}
-
-wazuh.example.com {
+wazuh.dobasmp.net {
 	import cf
 	encode gzip
 	reverse_proxy https://127.0.0.1:5601 {
@@ -71,30 +72,30 @@ wazuh.example.com {
 	}
 }
 
-dns.example.com {
+
+
+cloud.dobasmp.net {
 	import cf
-	handle /dns-query* {
-		reverse_proxy https://127.0.0.1:8443 {
-			transport http {
-				tls_server_name dns.example.com
-			}
-		}
-	}
-	handle {
-		respond "DoH endpoint. Use /dns-query" 200
-	}
+	encode gzip
+	reverse_proxy 127.0.0.1:8088
 }
 
-proxy.example.com {
+proxy.dobasmp.net {
 	import cf
 	encode gzip
 	root * /srv/status/caddy
 	file_server
 }
 
-crowdsec.example.com {
+crowdsec.dobasmp.net {
 	import cf
 	encode gzip
 	root * /srv/status/crowdsec
 	file_server
+}
+
+monitor.dobasmp.net {
+	import cf
+	encode gzip
+	reverse_proxy 127.0.0.1:3020
 }

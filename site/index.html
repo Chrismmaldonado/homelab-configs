@@ -1,0 +1,516 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>christopher@homelab</title>
+  <meta name="description" content="My homelab on bare metal: DNS, VPN, monitoring, and services I run myself at home." />
+  <meta name="theme-color" content="#07090a" />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500;700&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/xterm@5.3.0/css/xterm.min.css" />
+  <link rel="stylesheet" href="styles.css" />
+</head>
+<body>
+  <div class="bg-grid" aria-hidden="true"></div>
+  <div class="scanlines" aria-hidden="true"></div>
+
+  <header class="nav">
+    <a class="brand" href="#top">
+      <span class="brand-prompt">christopher@homelab</span><span class="brand-path">:~</span><span class="cursor-blink">_</span>
+    </a>
+    <nav class="nav-links">
+      <a href="#architecture">architecture</a>
+      <a href="#case-study">case study</a>
+      <a href="#terminal">terminal</a>
+      <a href="#stack">stack</a>
+      <a href="#status">status</a>
+      <a href="#security">security</a>
+      <a href="#reliability">reliability</a>
+      <a href="#specs">specs</a>
+      <a href="#about">about</a>
+    </nav>
+  </header>
+
+  <main id="top">
+    <!-- HERO -->
+    <section class="hero">
+      <div class="terminal reveal">
+        <div class="terminal-bar">
+          <span class="dot red"></span><span class="dot yellow"></span><span class="dot green"></span>
+          <span class="terminal-title">bash - christopher@homelab</span>
+        </div>
+        <div class="terminal-body">
+          <p class="line"><span class="prompt">christopher@homelab</span>:<span class="dir">~</span>$ whoami</p>
+          <p class="line out">christopher. I build and run a homelab at home</p>
+          <p class="line"><span class="prompt">christopher@homelab</span>:<span class="dir">~</span>$ cat mission.txt</p>
+          <p class="line out typed" id="typed"></p>
+          <p class="line"><span class="prompt">christopher@homelab</span>:<span class="dir">~</span>$ <span class="cursor-blink">_</span></p>
+        </div>
+      </div>
+      <div class="hero-meta reveal">
+        <span class="chip"><span class="pulse"></span> bare metal, always on</span>
+        <span class="chip">20+ services in Docker</span>
+        <span class="chip">DNS · VPN · monitoring</span>
+      </div>
+      <div id="hero-live" class="hero-live reveal" aria-label="Live host metrics">
+        <span class="chip chip-live" id="hero-services">services …</span>
+        <span class="chip chip-live" id="hero-cpu">cpu …</span>
+        <span class="chip chip-live" id="hero-mem">ram …</span>
+        <span class="chip chip-live" id="hero-disk">disk …</span>
+      </div>
+    </section>
+
+    <!-- ARCHITECTURE -->
+    <section id="architecture" class="section">
+      <h2 class="section-title reveal"><span class="hash">#</span> architecture</h2>
+      <p class="section-sub reveal">How traffic reaches the portfolio, the live terminal, and the Fabric SMP game server.</p>
+      <div class="arch-wrap reveal">
+        <svg class="arch-diagram" viewBox="0 0 980 680" role="img" aria-label="Traffic flow diagram">
+          <defs>
+            <marker id="arrow" markerWidth="8" markerHeight="8" refX="6" refY="3" orient="auto">
+              <path d="M0,0 L6,3 L0,6 Z" fill="#2bff9c"/>
+            </marker>
+            <marker id="arrowCyan" markerWidth="8" markerHeight="8" refX="6" refY="3" orient="auto">
+              <path d="M0,0 L6,3 L0,6 Z" fill="#5ef1ff"/>
+            </marker>
+            <marker id="arrowGame" markerWidth="8" markerHeight="8" refX="6" refY="3" orient="auto">
+              <path d="M0,0 L6,3 L0,6 Z" fill="#ffb020"/>
+            </marker>
+            <marker id="arrowShield" markerWidth="8" markerHeight="8" refX="6" refY="3" orient="auto">
+              <path d="M0,0 L6,3 L0,6 Z" fill="#c77dff"/>
+            </marker>
+            <linearGradient id="panelGrad" x1="0" y1="0" x2="0" y2="1">
+              <stop offset="0%" stop-color="#121a1c"/>
+              <stop offset="100%" stop-color="#0c1213"/>
+            </linearGradient>
+          </defs>
+          <!-- Wires (behind nodes) -->
+          <g class="arch-wires" aria-hidden="true">
+            <path d="M 152 50 H 198" fill="none" stroke="#2bff9c" stroke-width="1.5" marker-end="url(#arrow)"/>
+            <path d="M 284 84 V 100" fill="none" stroke="#6c807e" stroke-width="1.2" marker-end="url(#arrow)"/>
+            <path d="M 152 66 H 176 V 202 H 198" fill="none" stroke="#5ef1ff" stroke-width="1.5" marker-end="url(#arrowCyan)"/>
+            <path d="M 368 50 H 389 V 82 H 458" fill="none" stroke="#2bff9c" stroke-width="1.5" marker-end="url(#arrow)"/>
+            <path d="M 368 202 H 389 V 146 H 708" fill="none" stroke="#5ef1ff" stroke-width="1.5" marker-end="url(#arrowCyan)"/>
+            <path d="M 460 298 H 389 V 74 H 368" fill="none" stroke="#2bff9c" stroke-width="1.2" stroke-dasharray="5 4" marker-end="url(#arrow)"/>
+            <path d="M 152 396 H 198" fill="none" stroke="#c77dff" stroke-width="1.5" marker-end="url(#arrowShield)"/>
+            <path d="M 348 432 V 452" fill="none" stroke="#c77dff" stroke-width="1.5" marker-end="url(#arrowShield)"/>
+            <path d="M 348 524 H 389 V 432 H 458" fill="none" stroke="#ffb020" stroke-width="1.5" marker-end="url(#arrowGame)"/>
+            <path d="M 152 554 H 198" fill="none" stroke="#ffb020" stroke-width="1.5" marker-end="url(#arrowGame)"/>
+            <path d="M 348 600 H 389 V 432 H 678" fill="none" stroke="#ffb020" stroke-width="1.5" marker-end="url(#arrowGame)"/>
+            <path d="M 695 316 V 358" fill="none" stroke="#6c807e" stroke-width="1.2" stroke-dasharray="4 3" marker-end="url(#arrow)"/>
+            <line x1="20" y1="332" x2="960" y2="332" stroke="#1c2a2c" stroke-width="1" stroke-dasharray="4 6"/>
+          </g>
+          <!-- Nodes -->
+          <g class="arch-nodes">
+          <rect x="20" y="24" width="132" height="52" rx="8" fill="url(#panelGrad)" stroke="#1c2a2c" stroke-width="1.5"/>
+          <text x="86" y="46" text-anchor="middle" fill="#cdd6d4" font-family="JetBrains Mono, monospace" font-size="12" font-weight="700">Visitors</text>
+          <text x="86" y="62" text-anchor="middle" fill="#6c807e" font-family="JetBrains Mono, monospace" font-size="10">browser</text>
+          <!-- Cloudflare Pages -->
+          <rect x="200" y="16" width="168" height="68" rx="8" fill="url(#panelGrad)" stroke="#2bff9c" stroke-width="1.5"/>
+          <text x="284" y="40" text-anchor="middle" fill="#2bff9c" font-family="JetBrains Mono, monospace" font-size="11" font-weight="700">Cloudflare Pages</text>
+          <text x="284" y="56" text-anchor="middle" fill="#6c807e" font-family="JetBrains Mono, monospace" font-size="9">static portfolio</text>
+          <text x="284" y="72" text-anchor="middle" fill="#5ef1ff" font-family="JetBrains Mono, monospace" font-size="8">christopher-lab.pages.dev</text>
+          <!-- afraid.org -->
+          <rect x="200" y="100" width="168" height="48" rx="8" fill="url(#panelGrad)" stroke="#1c2a2c" stroke-width="1.5"/>
+          <text x="284" y="122" text-anchor="middle" fill="#cdd6d4" font-family="JetBrains Mono, monospace" font-size="11" font-weight="700">afraid.org</text>
+          <text x="284" y="138" text-anchor="middle" fill="#6c807e" font-family="JetBrains Mono, monospace" font-size="9">URL forward → Pages</text>
+          <!-- CF Quick Tunnel -->
+          <rect x="200" y="168" width="168" height="68" rx="8" fill="url(#panelGrad)" stroke="#5ef1ff" stroke-width="1.5"/>
+          <text x="284" y="192" text-anchor="middle" fill="#5ef1ff" font-family="JetBrains Mono, monospace" font-size="11" font-weight="700">CF Quick Tunnel</text>
+          <text x="284" y="208" text-anchor="middle" fill="#6c807e" font-family="JetBrains Mono, monospace" font-size="9">WebSocket proxy</text>
+          <text x="284" y="224" text-anchor="middle" fill="#6c807e" font-family="JetBrains Mono, monospace" font-size="8">terminal-gateway</text>
+          <!-- Homelab box -->
+          <rect x="430" y="16" width="530" height="300" rx="12" fill="rgba(18,26,28,0.5)" stroke="#1c2a2c" stroke-width="2" stroke-dasharray="6 4"/>
+          <text x="695" y="40" text-anchor="middle" fill="#2bff9c" font-family="JetBrains Mono, monospace" font-size="13" font-weight="700">Homelab</text>
+          <rect x="460" y="58" width="150" height="48" rx="8" fill="url(#panelGrad)" stroke="#1c2a2c"/>
+          <text x="535" y="80" text-anchor="middle" fill="#cdd6d4" font-family="JetBrains Mono, monospace" font-size="11" font-weight="700">Caddy</text>
+          <text x="535" y="96" text-anchor="middle" fill="#6c807e" font-family="JetBrains Mono, monospace" font-size="9">reverse proxy · TLS</text>
+          <rect x="630" y="58" width="170" height="48" rx="8" fill="url(#panelGrad)" stroke="#1c2a2c"/>
+          <text x="715" y="80" text-anchor="middle" fill="#cdd6d4" font-family="JetBrains Mono, monospace" font-size="11" font-weight="700">Docker services</text>
+          <text x="715" y="96" text-anchor="middle" fill="#6c807e" font-family="JetBrains Mono, monospace" font-size="9">20+ containers</text>
+          <rect x="820" y="58" width="120" height="48" rx="8" fill="url(#panelGrad)" stroke="#1c2a2c"/>
+          <text x="880" y="80" text-anchor="middle" fill="#cdd6d4" font-family="JetBrains Mono, monospace" font-size="11" font-weight="700">Tailscale</text>
+          <text x="880" y="96" text-anchor="middle" fill="#6c807e" font-family="JetBrains Mono, monospace" font-size="9">mesh VPN</text>
+          <rect x="460" y="122" width="230" height="48" rx="8" fill="url(#panelGrad)" stroke="#1c2a2c"/>
+          <text x="575" y="144" text-anchor="middle" fill="#cdd6d4" font-family="JetBrains Mono, monospace" font-size="11" font-weight="700">AdGuard + Unbound</text>
+          <text x="575" y="160" text-anchor="middle" fill="#6c807e" font-family="JetBrains Mono, monospace" font-size="9">recursive DNS</text>
+          <rect x="710" y="122" width="230" height="48" rx="8" fill="url(#panelGrad)" stroke="#5ef1ff"/>
+          <text x="825" y="144" text-anchor="middle" fill="#5ef1ff" font-family="JetBrains Mono, monospace" font-size="11" font-weight="700">terminal-gateway</text>
+          <text x="825" y="160" text-anchor="middle" fill="#6c807e" font-family="JetBrains Mono, monospace" font-size="9">read-only shell</text>
+          <rect x="460" y="186" width="480" height="48" rx="8" fill="url(#panelGrad)" stroke="#1c2a2c"/>
+          <text x="700" y="208" text-anchor="middle" fill="#cdd6d4" font-family="JetBrains Mono, monospace" font-size="11" font-weight="700">Monitoring stack</text>
+          <text x="700" y="224" text-anchor="middle" fill="#6c807e" font-family="JetBrains Mono, monospace" font-size="9">Maintenant · CrowdSec · OpenCanary</text>
+          <rect x="460" y="250" width="480" height="48" rx="8" fill="url(#panelGrad)" stroke="#1c2a2c"/>
+          <text x="700" y="272" text-anchor="middle" fill="#cdd6d4" font-family="JetBrains Mono, monospace" font-size="11" font-weight="700">Apps · Nextcloud · Paperless · Wazuh</text>
+          <text x="700" y="288" text-anchor="middle" fill="#6c807e" font-family="JetBrains Mono, monospace" font-size="9">files · SIEM · CrowdSec · Restic</text>
+          <!-- Game paths -->
+          <rect x="20" y="370" width="132" height="52" rx="8" fill="url(#panelGrad)" stroke="#ffb020" stroke-width="1.5"/>
+          <text x="86" y="392" text-anchor="middle" fill="#ffb020" font-family="JetBrains Mono, monospace" font-size="11" font-weight="700">Java players</text>
+          <text x="86" y="408" text-anchor="middle" fill="#6c807e" font-family="JetBrains Mono, monospace" font-size="9">Minecraft client</text>
+          <rect x="20" y="528" width="132" height="52" rx="8" fill="url(#panelGrad)" stroke="#ffb020" stroke-width="1.5"/>
+          <text x="86" y="550" text-anchor="middle" fill="#ffb020" font-family="JetBrains Mono, monospace" font-size="11" font-weight="700">Bedrock players</text>
+          <text x="86" y="566" text-anchor="middle" fill="#6c807e" font-family="JetBrains Mono, monospace" font-size="9">phone · console</text>
+          <rect x="200" y="360" width="148" height="72" rx="8" fill="url(#panelGrad)" stroke="#c77dff" stroke-width="1.5"/>
+          <text x="274" y="384" text-anchor="middle" fill="#c77dff" font-family="JetBrains Mono, monospace" font-size="11" font-weight="700">TCPShield</text>
+          <text x="274" y="400" text-anchor="middle" fill="#6c807e" font-family="JetBrains Mono, monospace" font-size="9">DDoS proxy</text>
+          <text x="274" y="416" text-anchor="middle" fill="#6c807e" font-family="JetBrains Mono, monospace" font-size="8">apex hides home IP</text>
+          <rect x="200" y="452" width="148" height="72" rx="8" fill="url(#panelGrad)" stroke="#ffb020" stroke-width="1.5"/>
+          <text x="274" y="476" text-anchor="middle" fill="#ffb020" font-family="JetBrains Mono, monospace" font-size="11" font-weight="700">playit.gg</text>
+          <text x="274" y="492" text-anchor="middle" fill="#6c807e" font-family="JetBrains Mono, monospace" font-size="9">Java TCP relay</text>
+          <text x="274" y="508" text-anchor="middle" fill="#6c807e" font-family="JetBrains Mono, monospace" font-size="8">SRV → tunnel</text>
+          <rect x="200" y="528" width="148" height="72" rx="8" fill="url(#panelGrad)" stroke="#ffb020" stroke-width="1.5"/>
+          <text x="274" y="552" text-anchor="middle" fill="#ffb020" font-family="JetBrains Mono, monospace" font-size="11" font-weight="700">playit.gg</text>
+          <text x="274" y="568" text-anchor="middle" fill="#6c807e" font-family="JetBrains Mono, monospace" font-size="9">Bedrock UDP relay</text>
+          <text x="274" y="584" text-anchor="middle" fill="#6c807e" font-family="JetBrains Mono, monospace" font-size="8">no TCPShield</text>
+          <!-- Fabric SMP box -->
+          <rect x="430" y="360" width="530" height="256" rx="12" fill="rgba(18,26,28,0.5)" stroke="#ffb020" stroke-width="2" stroke-dasharray="6 4"/>
+          <text x="695" y="386" text-anchor="middle" fill="#ffb020" font-family="JetBrains Mono, monospace" font-size="13" font-weight="700">Fabric SMP</text>
+          <rect x="460" y="404" width="200" height="56" rx="8" fill="url(#panelGrad)" stroke="#ffb020"/>
+          <text x="560" y="428" text-anchor="middle" fill="#cdd6d4" font-family="JetBrains Mono, monospace" font-size="11" font-weight="700">Fabric server</text>
+          <text x="560" y="446" text-anchor="middle" fill="#6c807e" font-family="JetBrains Mono, monospace" font-size="9">Java · systemd · :25565</text>
+          <rect x="680" y="404" width="200" height="56" rx="8" fill="url(#panelGrad)" stroke="#ffb020"/>
+          <text x="780" y="428" text-anchor="middle" fill="#cdd6d4" font-family="JetBrains Mono, monospace" font-size="11" font-weight="700">Geyser</text>
+          <text x="780" y="446" text-anchor="middle" fill="#6c807e" font-family="JetBrains Mono, monospace" font-size="9">Bedrock bridge · :19132</text>
+          <rect x="460" y="478" width="480" height="48" rx="8" fill="url(#panelGrad)" stroke="#c77dff"/>
+          <text x="700" y="500" text-anchor="middle" fill="#c77dff" font-family="JetBrains Mono, monospace" font-size="11" font-weight="700">Cloudflare DNS</text>
+          <text x="700" y="516" text-anchor="middle" fill="#6c807e" font-family="JetBrains Mono, monospace" font-size="9">dobasmp.net apex → TCPShield · SRV → playit</text>
+          <rect x="460" y="542" width="480" height="48" rx="8" fill="url(#panelGrad)" stroke="#1c2a2c"/>
+          <text x="700" y="564" text-anchor="middle" fill="#cdd6d4" font-family="JetBrains Mono, monospace" font-size="11" font-weight="700">Live status on portfolio</text>
+          <text x="700" y="580" text-anchor="middle" fill="#6c807e" font-family="JetBrains Mono, monospace" font-size="9">Maintenant · GameDig player count · no public join info</text>
+          </g>
+          <!-- Wire labels (on top, in gutters) -->
+          <g class="arch-wire-labels" fill="#6c807e" font-family="JetBrains Mono, monospace" font-size="8">
+            <text x="30" y="348">portfolio</text>
+            <text x="30" y="362">game server</text>
+            <text x="164" y="388">Java</text>
+            <text x="164" y="546">UDP</text>
+            <text x="391" y="68" text-anchor="middle">HTTPS</text>
+            <text x="391" y="138" text-anchor="middle">WSS</text>
+            <text x="391" y="510" text-anchor="middle">TCP</text>
+            <text x="318" y="312">status.json</text>
+            <text x="656" y="338" text-anchor="end">LAN poll</text>
+          </g>
+        </svg>
+        <div class="arch-legend">
+          <span class="arch-chip"><span class="arch-dot green"></span> static site path</span>
+          <span class="arch-chip"><span class="arch-dot cyan"></span> live terminal path</span>
+          <span class="arch-chip"><span class="arch-dot" style="background:#c77dff"></span> TCPShield · Java</span>
+          <span class="arch-chip"><span class="arch-dot" style="background:#ffb020"></span> Fabric SMP · playit</span>
+          <span class="arch-chip"><span class="arch-dot dim"></span> homelab services</span>
+        </div>
+      </div>
+    </section>
+
+    <!-- CASE STUDY -->
+    <section id="case-study" class="section">
+      <h2 class="section-title reveal"><span class="hash">#</span> how this site works</h2>
+      <p class="section-sub reveal">A quick case study on shipping a public portfolio when your ISP won't let inbound ports through.</p>
+      <div class="case-grid">
+        <article class="case-card reveal">
+          <h3 class="case-label">Problem</h3>
+          <p>I wanted a public portfolio that shows off the homelab (live status, a read-only terminal, the whole thing), but my ISP blocks inbound ports. I can't just point a domain at my house and call it a day.</p>
+        </article>
+        <article class="case-card reveal">
+          <h3 class="case-label">Approach</h3>
+          <p>I put the static site on Cloudflare Pages (free, fast, without running a public origin on this box). My afraid.org subdomain forwards to Pages so I get a clean URL. For the live terminal, a Cloudflare quick tunnel on the homelab exposes a WebSocket to a read-only gateway with sensitive paths blocked and output redacted. Status syncs from Maintenant on a cron job.</p>
+        </article>
+        <article class="case-card reveal">
+          <h3 class="case-label">Outcome</h3>
+          <p>Public site with zero open inbound ports. Visitors get HTTPS, live monitoring, and a sandboxed shell peek at the stack. Deploys are a script on the homelab that pushes to Pages. When the box reboots, Docker brings everything back in about two minutes.</p>
+        </article>
+      </div>
+    </section>
+
+    <!-- STACK -->
+    <section id="stack" class="section">
+      <h2 class="section-title reveal"><span class="hash">#</span> the stack</h2>
+      <p class="section-sub reveal">Docker on the OptiPlex 5040, with Fabric SMP on the same host. Caddy terminates TLS for LAN services under dobasmp.net.</p>
+      <div class="grid">
+        <article class="card reveal">
+          <h3>AdGuard Home + Unbound</h3>
+          <p>I use AdGuard Home with Unbound for network-wide blocking and recursive DNS. Queries go to the root servers, not some upstream resolver.</p>
+          <div class="tags"><span>DNS</span><span>Privacy</span><span>Unbound</span></div>
+        </article>
+        <article class="card reveal">
+          <h3>Encrypted DNS</h3>
+          <p>DoH, DoT, and DoQ endpoints so devices can resolve DNS privately. Works off-network too when I'm on the VPN.</p>
+          <div class="tags"><span>DoH</span><span>DoT</span><span>DoQ</span></div>
+        </article>
+        <article class="card reveal">
+          <h3>Tailscale</h3>
+          <p>Tailscale mesh VPN with an exit node and MagicDNS. I can reach everything at home from anywhere without opening ports.</p>
+          <div class="tags"><span>WireGuard</span><span>Exit node</span><span>MagicDNS</span></div>
+        </article>
+        <article class="card reveal">
+          <h3>SearXNG</h3>
+          <p>Self-hosted SearXNG for search. No tracking, no profile building, just aggregated results.</p>
+          <div class="tags"><span>Search</span><span>Privacy</span></div>
+        </article>
+        <article class="card reveal">
+          <h3>Caddy</h3>
+          <p>Caddy as reverse proxy and TLS. Let's Encrypt certs via DNS-01, so every service gets a clean HTTPS URL. Local status page at <code>proxy.dobasmp.net</code> lists configured hosts.</p>
+          <div class="tags"><span>Reverse proxy</span><span>Let's Encrypt</span></div>
+        </article>
+        <article class="card reveal">
+          <h3>Maintenant</h3>
+          <p>Maintenant handles HTTP/TCP checks, host and container metrics, container logs, TLS expiry, and a status page. </p>
+          <div class="tags"><span>Maintenant</span><span>CrowdSec</span></div>
+        </article>
+        <article class="card reveal">
+          <h3>Homepage</h3>
+          <p>LAN startpage for AdGuard, Maintenant, Nextcloud, Wazuh, Paperless, CrowdSec, OpenCanary, Minecraft map, and the rest.</p>
+          <div class="tags"><span>Dashboard</span><span>LAN</span></div>
+        </article>
+        <article class="card reveal">
+          <h3>Paperless-ngx</h3>
+          <p>Document OCR and archive. Cloudflare Email Routing drops mail into Gmail, then Paperless IMAP consumes and deletes after ingest.</p>
+          <div class="tags"><span>OCR</span><span>IMAP</span><span>Archive</span></div>
+        </article>
+        <article class="card reveal">
+          <h3>Wazuh</h3>
+          <p>Single-node SIEM (indexer + manager + dashboard) with host agent and phone alerts for high-severity events. Capped so it shares the box with Minecraft.</p>
+          <div class="tags"><span>SIEM</span><span>Agent</span><span>Alerts</span></div>
+        </article>
+        <article class="card reveal">
+          <h3>Nextcloud</h3>
+          <p>Personal file sync and sharing - photos, documents, calendars - under <code>cloud.dobasmp.net</code>. Data lives on the homelab (not a public cloud). Desktop and phone apps talk to your box over HTTPS.</p>
+          <div class="tags"><span>Files</span><span>Sync</span><span>Private</span></div>
+        </article>
+        <article class="card reveal">
+          <h3>CrowdSec</h3>
+          <p>Collaborative IDS: reads Caddy access logs and SSH auth, detects scanners and brute-force, and the host firewall bouncer drops bad IPs automatically. Local status page at <code>crowdsec.dobasmp.net</code> shows bans and alerts; CLI <code>cscli</code> still available on the box.</p>
+          <div class="tags"><span>IDS</span><span>Firewall</span><span>SSH</span><span>Caddy</span></div>
+        </article>
+        <article class="card reveal">
+        <article class="card reveal">
+          <h3>OpenCanary</h3>
+          <p>LAN honeypot (SSH, RDP, MySQL, Redis, FTP, Telnet, VNC, NAS login). Hits send ntfy alerts with source IP and service.</p>
+          <div class="tags"><span>Honeypot</span><span>ntfy</span><span>Deception</span></div>
+        </article>
+          <h3>Restic backups</h3>
+          <p>Nightly encrypted snapshots to the USB stick: stack configs, AdGuard, cron, plus PostgreSQL dumps for Nextcloud. Retention: 7 daily, 4 weekly, 2 monthly. This is disaster recovery for configs and DBs - not a full mirror of every file you upload.</p>
+          <div class="tags"><span>Restic</span><span>USB</span><span>Cron</span></div>
+        </article>
+<article class="card reveal">
+          <h3>Fabric SMP</h3>
+          <p>A modded Fabric server with Geyser for Bedrock cross-play. Java players hit TCPShield first so the home IP stays out of DNS, then playit tunnels TCP to the box. Bedrock goes through playit only. Maintenant and this site show online status and player count - no join info posted here.</p>
+          <div class="tags"><span>Fabric</span><span>Geyser</span><span>TCPShield</span><span>playit</span></div>
+        </article>
+      </div>
+    </section>
+
+    <!-- LIVE TERMINAL -->
+    <section id="terminal" class="section">
+      <h2 class="section-title reveal"><span class="hash">#</span> explore the stack</h2>
+      <p class="section-sub reveal">Read-only shell into <code>/opt/stacks</code> over a Cloudflare Tunnel. You can't edit anything. Sensitive paths are blocked and output gets redacted.</p>
+      <div class="terminal-live reveal">
+        <div class="terminal-live-bar">
+          <span class="dot red"></span><span class="dot yellow"></span><span class="dot green"></span>
+          <span class="terminal-title">ssh - christopher@homelab (read-only)</span>
+          <span id="terminal-status" class="terminal-status">waiting…</span>
+        </div>
+        <div id="terminal-mount" class="terminal-mount" tabindex="0" aria-label="Read-only homelab terminal"></div>
+      </div>
+    </section>
+
+    <!-- STATUS -->
+    <section id="status" class="section">
+      <h2 class="section-title reveal"><span class="hash">#</span> live status</h2>
+      <p class="section-sub reveal">Pulled live from Maintenant and the homelab host. Updates every minute.</p>
+      <div id="host-resources" class="resource-bars reveal" hidden>
+        <div class="resource-row">
+          <span class="resource-label">CPU</span>
+          <div class="resource-track"><div class="resource-fill" id="bar-cpu"></div></div>
+          <span class="resource-val" id="val-cpu">…</span>
+        </div>
+        <div class="resource-row">
+          <span class="resource-label">RAM</span>
+          <div class="resource-track"><div class="resource-fill" id="bar-mem"></div></div>
+          <span class="resource-val" id="val-mem">…</span>
+        </div>
+        <div class="resource-row">
+          <span class="resource-label">Disk</span>
+          <div class="resource-track"><div class="resource-fill" id="bar-disk"></div></div>
+          <span class="resource-val" id="val-disk">…</span>
+        </div>
+      </div>
+      <div class="status-wrap reveal">
+        <div class="status-head">
+          <span id="status-overall" class="status-overall">checking…</span>
+          <span id="status-updated" class="status-updated"></span>
+        </div>
+        <div id="status-list" class="status-list">
+          <div class="status-empty">Connecting to monitoring…</div>
+        </div>
+      </div>
+    </section>
+
+    <!-- RELIABILITY -->
+    <section id="reliability" class="section">
+      <h2 class="section-title reveal"><span class="hash">#</span> reliability</h2>
+      <p class="section-sub reveal">What happens when the box reboots, how status stays fresh, and what I actually monitor.</p>
+      <div class="reliability-grid">
+        <div class="reliability-metrics reveal">
+          <h3 class="spec-h">live metrics</h3>
+          <ul class="spec-list">
+            <li><span class="k">Host uptime</span><span class="v" id="rel-uptime">…</span></li>
+            <li><span class="k">Last deploy</span><span class="v" id="rel-deploy">…</span></li>
+            <li><span class="k">Last incident</span><span class="v" id="rel-incident">…</span></li>
+            <li><span class="k">Status synced</span><span class="v" id="rel-generated">…</span></li>
+          </ul>
+        </div>
+        <div class="reliability-runbook reveal">
+          <h3 class="spec-h">runbook</h3>
+          <ul class="runbook-list">
+            <li><strong>On reboot:</strong> systemd starts Docker; autostart brings up DNS, proxy, CrowdSec, Nextcloud, and the rest. USB mounts via fstab for Restic. Caddy picks up certs; tunnels reconnect.</li>
+            <li><strong>Status sync:</strong> <code>fetch_status.py</code> runs every minute via cron. It pulls Maintenant endpoint checks, host CPU/RAM/disk, deploy timestamp, and incident log into <code>status.json</code>, then deploys if the hash changed.</li>
+            <li><strong>Monitoring:</strong> Maintenant watches HTTP/TCP endpoints, container health, host metrics, and live logs in one UI. I get alerts when something stays down.</li>
+          </ul>
+        </div>
+        <div class="reliability-backups reveal">
+          <h3 class="spec-h">backups</h3>
+          <ul class="runbook-list">
+            <li><strong>Restic (nightly):</strong> encrypted repo on the USB stick at <code>/mnt/backup-usb/restic</code> - compose files, Caddyfile, AdGuard config, cron, and PostgreSQL dumps for Nextcloud. Password in <code>/opt/stacks/.restic.pass</code> (root only).</li>
+            <li><strong>Configs:</strong> same paths are in the Restic job; I also keep timestamped <code>.bak</code> files before edits.</li>
+            <li><strong>AdGuard:</strong> periodic export of DNS rewrites and settings so I can rebuild filtering after a wipe.</li>
+            <li><strong>Recovery test:</strong> full stack has come back from reboot in ~2 minutes. I treat that as the baseline DR drill.</li>
+          </ul>
+        </div>
+      </div>
+    </section>
+
+    <!-- SECURITY -->
+    <section id="security" class="section">
+      <h2 class="section-title reveal"><span class="hash">#</span> security model</h2>
+      <p class="section-sub reveal">How I limit blast radius on a box that is partly public-facing.</p>
+      <div class="security-grid">
+        <article class="card reveal">
+          <h3>No inbound ports</h3>
+          <p>ISP blocks inbound anyway. Public site on Cloudflare Pages. Homelab services reach the internet only through outbound tunnels and Tailscale.</p>
+          <div class="tags"><span>Edge access</span><span>Zero open ports</span></div>
+        </article>
+        <article class="card reveal">
+          <h3>Read-only terminal</h3>
+          <p>Path jail to <code>/opt/stacks</code> only. Blocked dotfiles, keys, env files, and databases. Output redacted. Commands audit-logged.</p>
+          <div class="tags"><span>Least privilege</span><span>Redaction</span></div>
+        </article>
+        <article class="card reveal">
+          <h3>Container hardening</h3>
+          <p>Terminal gateway runs read-only rootfs, non-root user, <code>cap_drop: ALL</code>, and <code>no-new-privileges</code>. Secrets stay outside deploy paths.</p>
+          <div class="tags"><span>Docker</span><span>cap_drop</span></div>
+        </article>
+        <article class="card reveal">
+          <h3>TLS everywhere</h3>
+          <p>Caddy terminates HTTPS with Let's Encrypt via DNS-01. HSTS on proxied services. Encrypted DNS (DoH/DoT/DoQ) for clients that support it.</p>
+          <div class="tags"><span>DNS-01</span><span>DoH</span></div>
+        </article>
+        <article class="card reveal">
+          <h3>Honeypot / deception</h3>
+          <p>OpenCanary listens on unused LAN ports that are not published to the internet. Probes raise ntfy alerts with source IP and service.</p>
+          <div class="tags"><span>OpenCanary</span><span>ntfy</span></div>
+        </article>
+      </div>
+    </section>
+
+    <!-- SPECS -->
+    <section id="specs" class="section">
+      <h2 class="section-title reveal"><span class="hash">#</span> the hardware</h2>
+      <p class="section-sub reveal">One recycled desktop today. Three phases to a fully local, VLAN-segmented homelab with zero cloud AI bills.</p>
+      <div class="specs specs-phases">
+        <div class="spec-col reveal">
+          <h3 class="spec-h">running now</h3>
+          <ul class="spec-list">
+            <li><span class="k">Host</span><span class="v">Dell OptiPlex 5040</span></li>
+            <li><span class="k">CPU</span><span class="v">i7-6700 @ 3.4&nbsp;GHz</span></li>
+            <li><span class="k">Memory</span><span class="v">32&nbsp;GB DDR3</span></li>
+            <li><span class="k">Storage</span><span class="v">476&nbsp;GB SATA SSD</span></li>
+            <li><span class="k">OS</span><span class="v">Ubuntu · Docker</span></li>
+            <li><span class="k">Network</span><span class="v">Tailscale · playit.gg</span></li>
+          </ul>
+        </div>
+        <div class="spec-col reveal">
+          <h3 class="spec-h">phase 1 · consolidate</h3>
+          <ul class="spec-list roadmap">
+            <li><span class="k">Compute</span><span class="v">5040 · NVMe upgrade next</span></li>
+            <li><span class="k">OS</span><span class="v">Proxmox or Ubuntu + Docker</span></li>
+            <li><span class="k">Stack</span><span class="v">AdGuard · Caddy · Tailscale</span></li>
+            <li><span class="k">AI</span><span class="v">Qwen 2.5 Coder 7B (Ollama)</span></li>
+          </ul>
+        </div>
+        <div class="spec-col reveal">
+          <h3 class="spec-h">phase 2 · cameras</h3>
+          <ul class="spec-list roadmap">
+            <li><span class="k">GPU</span><span class="v">RTX 3050/4060 LP</span></li>
+            <li><span class="k">Cameras</span><span class="v">Reolink PoE + Frigate</span></li>
+            <li><span class="k">Network</span><span class="v">TP-Link PoE+ · VLANs</span></li>
+            <li><span class="k">AI</span><span class="v">Qwen 2.5 Coder 14B (VRAM)</span></li>
+          </ul>
+        </div>
+        <div class="spec-col reveal">
+          <h3 class="spec-h">phase 3</h3>
+          <ul class="spec-list roadmap">
+            <li><span class="k">Compute</span><span class="v">ATX · 64&nbsp;GB DDR5</span></li>
+            <li><span class="k">Rack</span><span class="v">19&quot; + 1500VA UPS</span></li>
+            <li><span class="k">GPU</span><span class="v">2× RTX 3090 · 48&nbsp;GB</span></li>
+            <li><span class="k">AI</span><span class="v">Qwen 32B / DeepSeek-R1</span></li>
+          </ul>
+        </div>
+      </div>
+      <p class="spec-goal reveal">Goal: VLAN segmentation + zero-utility-cost local AI coding (Aider / Continue.dev in VS Code)</p>
+    </section>
+
+    <!-- EASTER EGG: OptiPlex Run -->
+    <section id="optiplex-run" class="section egg-section" hidden>
+      <h2 class="section-title reveal visible"><span class="hash">#</span> optiplex.run()</h2>
+      <p class="section-sub reveal visible">Dodge the error logs. Click, tap, or press <kbd>Space</kbd> to jump.</p>
+      <div class="egg-wrap reveal visible">
+        <div class="egg-toolbar">
+          <span class="egg-score">score <strong id="egg-score">0</strong></span>
+          <div class="egg-buffs">
+            <span id="egg-shield" class="egg-buff" title="Tailscale shield - blocks one hit">TS</span>
+            <span id="egg-adguard" class="egg-buff" title="AdGuard - blocks one error">AG</span>
+          </div>
+          <button type="button" id="egg-sound" class="egg-sound" aria-pressed="false">sound off</button>
+        </div>
+        <div class="egg-canvas-wrap">
+          <canvas id="egg-canvas" width="720" height="220" tabindex="0" aria-label="OptiPlex Run mini-game - click, tap, or press Space to jump"></canvas>
+          <div id="egg-overlay" class="egg-overlay hidden">
+            <p id="egg-msg">game over</p>
+            <p class="egg-hint">click to restart</p>
+          </div>
+        </div>
+        <p class="egg-note muted">Power-ups: <strong>Tailscale</strong> = one free hit · <strong>AdGuard</strong> = block one error log</p>
+      </div>
+    </section>
+
+    <!-- ABOUT -->
+    <section id="about" class="section">
+      <h2 class="section-title reveal"><span class="hash">#</span> about</h2>
+      <div class="about reveal">
+        <p>I run a homelab at home: DNS, VPN, reverse proxy, monitoring, and Docker. I built this portfolio site and the automation around it myself.</p>
+        <p>Building toward systems administration. The lab is where I practice what I do at work: monitoring, DNS, Linux, documentation, and recovery.</p>
+        <div class="about-actions">
+          <a class="btn primary" id="linkedin" href="https://www.linkedin.com/in/christopher-maldonado-86317228b/?skipRedirect=true" target="_blank" rel="noopener">LinkedIn →</a>
+          <a class="btn" href="https://github.com/Chrismmaldonado/homelab-configs" target="_blank" rel="noopener">configs on GitHub →</a>
+          <a class="btn" href="#terminal">try the terminal</a>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <footer class="footer">
+    <span>runs on bare metal at my place · <span class="accent">christopher.isageek.net</span></span>
+    <span class="muted">Caddy out front · Cloudflare Pages for the site</span>
+    <button type="button" id="egg-trigger" class="egg-trigger" aria-label="Play OptiPlex Run">
+      <canvas id="egg-trigger-sprite" width="40" height="40" aria-hidden="true"></canvas>
+      <span class="egg-trigger-label">run</span>
+    </button>
+  </footer>
+
+  <script src="app.js"></script>
+  <script src="terminal.js"></script>
+  <script src="game.js"></script>
+</body>
+</html>
