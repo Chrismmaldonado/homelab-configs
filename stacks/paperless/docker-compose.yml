@@ -1,5 +1,3 @@
-# Paperless-ngx: document OCR + archive with Postgres, Redis, Tika & Gotenberg.
-# All secrets are placeholders — supply real values via a host-local .env file.
 name: paperless
 
 x-logging: &logging
@@ -30,7 +28,7 @@ services:
     environment:
       POSTGRES_DB: paperless
       POSTGRES_USER: paperless
-      POSTGRES_PASSWORD: ${PAPERLESS_DB_PASSWORD}
+      POSTGRES_PASSWORD: "N21ODcnIedpbFrhPgfDqcH8BWdoWhwWe"
     volumes:
       - pgdata:/var/lib/postgresql/data
     logging: *logging
@@ -59,22 +57,22 @@ services:
       PAPERLESS_DBHOST: db
       PAPERLESS_DBNAME: paperless
       PAPERLESS_DBUSER: paperless
-      PAPERLESS_DBPASS: ${PAPERLESS_DB_PASSWORD}
-      PAPERLESS_SECRET_KEY: ${PAPERLESS_SECRET_KEY}
-      PAPERLESS_URL: https://paperless.example.com
-      PAPERLESS_CSRF_TRUSTED_ORIGINS: https://paperless.example.com
-      PAPERLESS_ALLOWED_HOSTS: paperless.example.com,localhost,127.0.0.1
+      PAPERLESS_DBPASS: "N21ODcnIedpbFrhPgfDqcH8BWdoWhwWe"
+      PAPERLESS_SECRET_KEY: "w9GWAIEDhd9_NyUD8-KNHcqjIkeAAkNmb7XlT5uF4rSRWJbaCK2TI1TToGWaKYDL"
+      PAPERLESS_URL: https://paperless.dobasmp.net
+      PAPERLESS_CSRF_TRUSTED_ORIGINS: https://paperless.dobasmp.net
+      PAPERLESS_ALLOWED_HOSTS: paperless.dobasmp.net,localhost,127.0.0.1
       PAPERLESS_OCR_LANGUAGE: eng
       PAPERLESS_TIKA_ENABLED: "1"
       PAPERLESS_TIKA_GOTENBERG_ENDPOINT: http://gotenberg:3000
       PAPERLESS_TIKA_ENDPOINT: http://tika:9998
       PAPERLESS_TIME_ZONE: America/Chicago
-      PAPERLESS_ADMIN_USER: ${PAPERLESS_ADMIN_USER}
-      PAPERLESS_ADMIN_PASSWORD: ${PAPERLESS_ADMIN_PASSWORD}
+      PAPERLESS_ADMIN_USER: "admin"
+      PAPERLESS_ADMIN_PASSWORD: "password"
       PAPERLESS_OCR_USER_ARGS: '{"invalidate_digital_signatures": true}'
       PAPERLESS_OCR_OUTPUT_TYPE: pdf
       PAPERLESS_OCR_SKIP_ARCHIVE_FILE: with_text
-      # Mail rules are configured in the UI; these keep the consume folder sane.
+      # Mail rules are configured in UI; these keep consume folder sane
       PAPERLESS_CONSUMER_DELETE_DUPLICATES: "true"
       PAPERLESS_FILENAME_FORMAT: "{created_year}/{correspondent}/{title}"
     logging: *logging

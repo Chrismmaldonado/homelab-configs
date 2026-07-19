@@ -1,6 +1,3 @@
-# Nextcloud (personal file sync/share) with Postgres.
-# App + data live on fast local Docker volumes; Restic backs up a nightly
-# pg_dump to USB. Secrets come from a host-local env file (--env-file).
 services:
   nextcloud-db:
     image: postgres:16-alpine
@@ -10,7 +7,7 @@ services:
     environment:
       POSTGRES_DB: nextcloud
       POSTGRES_USER: nextcloud
-      POSTGRES_PASSWORD: ${NEXTCLOUD_DB_PASSWORD}
+      POSTGRES_PASSWORD: ${AUTHENTIK_POSTGRES_PASSWORD}
     volumes:
       - nextcloud_pg:/var/lib/postgresql/data
   nextcloud:
@@ -26,12 +23,12 @@ services:
       POSTGRES_HOST: nextcloud-db
       POSTGRES_DB: nextcloud
       POSTGRES_USER: nextcloud
-      POSTGRES_PASSWORD: ${NEXTCLOUD_DB_PASSWORD}
+      POSTGRES_PASSWORD: ${AUTHENTIK_POSTGRES_PASSWORD}
       NEXTCLOUD_ADMIN_USER: ${NEXTCLOUD_ADMIN_USER}
       NEXTCLOUD_ADMIN_PASSWORD: ${NEXTCLOUD_ADMIN_PASSWORD}
-      NEXTCLOUD_TRUSTED_DOMAINS: cloud.example.com
+      NEXTCLOUD_TRUSTED_DOMAINS: cloud.dobasmp.net
       OVERWRITEPROTOCOL: https
-      OVERWRITEHOST: cloud.example.com
+      OVERWRITEHOST: cloud.dobasmp.net
     volumes:
       - nextcloud_html:/var/www/html
 volumes:

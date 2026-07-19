@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""Pull Maintenant endpoint status + host metrics; write status.json for the static site."""
+"""Write site/status.json from Maintenant + host metrics."""
 import json
 import hashlib
 import shutil

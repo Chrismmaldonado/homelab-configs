@@ -1,7 +1,5 @@
 #!/usr/bin/env bash
-# Homelab autostart - bring up all active Docker Compose stacks on boot.
-# Installed as homelab-autostart.service (runs after docker.service).
-# The inactive gluetun VPN stack is intentionally excluded.
+# Boot: start Docker compose stacks
 set -u
 LOG=/var/log/homelab-autostart.log
 exec >>"$LOG" 2>&1
@@ -31,31 +29,31 @@ up /opt/stacks                                          # adguard, homepage
 up /opt/stacks/proxy                                    # caddy (reverse proxy / TLS)
 up /opt/stacks/searxng                                  # searxng
 up /opt/stacks/terminal-gateway                         # terminal-gateway (read-only public shell)
-# cloudflared quick tunnel: start the existing container WITHOUT recreating it
-# (recreating rotates the public trycloudflare URL). Restart policy also covers it.
+# cloudflared-terminal: start existing container
+# recreating rotates the trycloudflare URL
 echo "--- starting cloudflared-terminal (no recreate) ---"
 docker start cloudflared-terminal 2>&1 || echo "cloudflared-terminal not present yet"
 up /opt/visitor-intel                                   # visitor-intel + cloudflared-ingest
-# /opt/stacks/privacy/gluetun intentionally NOT started (inactive VPN egress).
+# gluetun not started
 
 echo "--- final container state ---"
 docker ps --format '{{.Names}}: {{.Status}}'
 echo "=== $(date -Is) homelab-autostart done ==="
 
-# lite: unbound + vaultwarden
+# lite
 cd /opt/stacks/lite && docker compose up -d
 
-# paperless-ngx
+# paperless
 cd /opt/stacks/paperless && docker compose up -d
 
 cd /opt/stacks/maintenant && docker compose up -d
 
-# crowdsec IDS
+# crowdsec
 cd /opt/stacks/opencanary && docker compose up -d
 
 cd /opt/stacks/crowdsec && docker compose up -d
 
-# nextcloud (local volumes; restic -> USB)
+# nextcloud
 cd /opt/stacks/nextcloud && docker compose --env-file /opt/stacks/.expand.secrets up -d
 
 # wazuh

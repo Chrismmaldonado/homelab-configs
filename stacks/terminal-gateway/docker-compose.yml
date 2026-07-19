@@ -1,0 +1,38 @@
+services:
+  terminal-gateway:
+    build: .
+    container_name: terminal-gateway
+    restart: unless-stopped
+    ports:
+      - "127.0.0.1:7681:7681"
+    volumes:
+      - /opt/stacks:/opt/stacks:ro
+      - ./data:/data
+    user: "10001:10001"
+    read_only: true
+    tmpfs:
+      - /tmp:size=8M,mode=1777
+    security_opt:
+      - no-new-privileges:true
+    cap_drop:
+      - ALL
+
+  cloudflared-terminal:
+    image: cloudflare/cloudflared:latest
+    container_name: cloudflared-terminal
+    restart: unless-stopped
+    network_mode: host
+    command: tunnel --no-autoupdate run --token ${TUNNEL_TOKEN}
+    environment:
+      - TUNNEL_TOKEN=${TUNNEL_TOKEN}
+    profiles:
+      - named-tunnel
+
+  cloudflared-quick:
+    image: cloudflare/cloudflared:latest
+    container_name: cloudflared-terminal
+    restart: unless-stopped
+    network_mode: host
+    command: tunnel --no-autoupdate --protocol http2 --url http://127.0.0.1:7681
+    profiles:
+      - quick-tunnel

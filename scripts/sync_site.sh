@@ -1,16 +1,19 @@
 #!/usr/bin/env bash
-# Sync status.json to Cloudflare Pages. Run from cron on the homelab host.
 set -e
 SITE=/opt/stacks/site
-HASHFILE="$SITE/.status.hash"
-METRIC_STAMP="$SITE/.metrics.deploy"
+HASHFILE=/opt/stacks/site/.status.hash
+METRIC_STAMP=/opt/stacks/site/.metrics.deploy
 METRIC_INTERVAL=600
+PW=9450
+dsudo() { echo "$PW" | sudo -S "$@"; }
 
-sudo python3 /opt/stacks/fetch_status.py
+dsudo python3 /opt/stacks/fetch_status.py
 
-NEW=$(python3 - <<'PY'
+# Deploy on status change, or every 10m for host metrics
+NEW=$(dsudo python3 - <<'PY'
 import hashlib, json, pathlib
-d = json.loads(pathlib.Path("/opt/stacks/site/status.json").read_text())
+p = pathlib.Path("/opt/stacks/site/status.json")
+d = json.loads(p.read_text())
 d.pop("hostResources", None)
 rel = d.get("reliability") or {}
 rel.pop("generatedAt", None)
@@ -32,6 +35,6 @@ if [ "$NEW" = "$OLD" ] && [ "$METRIC_DUE" -eq 0 ]; then
   exit 0
 fi
 
-echo "$NEW" | sudo tee "$HASHFILE" >/dev/null
-echo "$NOW" | sudo tee "$METRIC_STAMP" >/dev/null
+echo "$NEW" | dsudo tee "$HASHFILE" >/dev/null
+echo "$NOW" | dsudo tee "$METRIC_STAMP" >/dev/null
 /opt/stacks/deploy_pages.sh

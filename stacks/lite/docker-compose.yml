@@ -1,5 +1,3 @@
-# Unbound recursive resolver — AdGuard Home forwards to this on 127.0.0.1:5335
-# so DNS queries resolve from the root servers instead of an upstream provider.
 name: lite
 
 x-logging: &logging

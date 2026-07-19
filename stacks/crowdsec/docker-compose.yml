@@ -1,6 +1,3 @@
-# CrowdSec IDS. Parses Caddy access logs + host SSH auth, creates ban
-# decisions. A host-installed crowdsec-firewall-bouncer applies them at
-# iptables (LAPI exposed on 127.0.0.1:8080). See acquis.d/ for log inputs.
 services:
   crowdsec:
     image: crowdsecurity/crowdsec:v1.6.5

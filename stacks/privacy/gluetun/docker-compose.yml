@@ -1,0 +1,24 @@
+# Optional Mullvad WireGuard egress. Inactive until .env is set.
+services:
+  gluetun:
+    image: qmcgaw/gluetun:latest
+    container_name: gluetun-mullvad
+    restart: unless-stopped
+    cap_add:
+      - NET_ADMIN
+    devices:
+      - /dev/net/tun:/dev/net/tun
+    ports:
+      - "8888:8888/tcp"   # HTTP proxy (optional, for testing egress IP)
+    env_file:
+      - .env
+    volumes:
+      - gluetun_data:/gluetun
+    healthcheck:
+      test: ["CMD", "/gluetun-entrypoint", "healthcheck"]
+      interval: 30s
+      timeout: 5s
+      retries: 3
+
+volumes:
+  gluetun_data:

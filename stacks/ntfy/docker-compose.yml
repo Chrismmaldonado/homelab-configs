@@ -1,5 +1,3 @@
-# ntfy self-hosted push notifications (phone alerts for Uptime Kuma & Wazuh).
-# Bound to localhost; Caddy fronts it. server.yml holds base-url + APNs upstream.
 services:
   ntfy:
     image: binwiederhier/ntfy:latest
