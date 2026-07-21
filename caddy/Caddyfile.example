@@ -27,10 +27,6 @@ adguard.dobasmp.net {
 	import cf
 	reverse_proxy 127.0.0.1:3000
 }
-map.dobasmp.net {
-	import cf
-	reverse_proxy 127.0.0.1:8100
-}
 dns.dobasmp.net {
 	import cf
 	handle /dns-query* {

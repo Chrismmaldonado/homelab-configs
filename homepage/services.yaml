@@ -43,13 +43,8 @@
         server: my-docker
         container: paperless
     - Minecraft:
-        href: https://map.dobasmp.net
-        description: DoBASMP server
+        description: DoBASMP Fabric server
         icon: minecraft.png
-    - BlueMap:
-        href: https://map.dobasmp.net
-        description: Live world map
-        icon: mdi-map
 
 - Background Services:
     - AdGuard:

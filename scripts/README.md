@@ -26,6 +26,12 @@ unit after `docker.service`. Starts Maintenant (not Kuma/Beszel/Dozzle).
 
 Nightly encrypted backup to USB: stack configs + Nextcloud Postgres dump.
 
+## homelab-cache-purge.sh
+
+Daily safe cache cleanup (systemd timer `05:15`): Docker build/dangling image
+prune, wrangler/npm caches, apt clean, journal vacuum, old `/tmp` files.
+Does not prune in-use images or compose volumes.
+
 ## status-pages/refresh.sh
 
 Static HTML status pages for Caddy and CrowdSec (services with no admin UI).
