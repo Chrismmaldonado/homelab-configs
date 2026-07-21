@@ -4,7 +4,7 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>christopher@homelab</title>
-  <meta name="description" content="My homelab on bare metal: DNS, VPN, monitoring, and services I run myself at home." />
+  <meta name="description" content="My homelab on bare metal: DNS, VPN, self-hosted email, monitoring, and services I run myself at home." />
   <meta name="theme-color" content="#07090a" />
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
@@ -52,7 +52,7 @@
       <div class="hero-meta reveal">
         <span class="chip"><span class="pulse"></span> bare metal, always on</span>
         <span class="chip">20+ services in Docker</span>
-        <span class="chip">DNS · VPN · monitoring</span>
+        <span class="chip">DNS · VPN · mail · monitoring</span>
       </div>
       <div id="hero-live" class="hero-live reveal" aria-label="Live host metrics">
         <span class="chip chip-live" id="hero-services">services …</span>
@@ -143,8 +143,8 @@
           <text x="700" y="208" text-anchor="middle" fill="#cdd6d4" font-family="JetBrains Mono, monospace" font-size="11" font-weight="700">Monitoring stack</text>
           <text x="700" y="224" text-anchor="middle" fill="#6c807e" font-family="JetBrains Mono, monospace" font-size="9">Maintenant · CrowdSec · OpenCanary</text>
           <rect x="460" y="250" width="480" height="48" rx="8" fill="url(#panelGrad)" stroke="#1c2a2c"/>
-          <text x="700" y="272" text-anchor="middle" fill="#cdd6d4" font-family="JetBrains Mono, monospace" font-size="11" font-weight="700">Apps · Nextcloud · Paperless · Wazuh</text>
-          <text x="700" y="288" text-anchor="middle" fill="#6c807e" font-family="JetBrains Mono, monospace" font-size="9">files · SIEM · CrowdSec · Restic</text>
+          <text x="700" y="272" text-anchor="middle" fill="#cdd6d4" font-family="JetBrains Mono, monospace" font-size="11" font-weight="700">Apps · Mail · Nextcloud · Paperless</text>
+          <text x="700" y="288" text-anchor="middle" fill="#6c807e" font-family="JetBrains Mono, monospace" font-size="9">Stalwart · Roundcube · Wazuh · Restic</text>
           <!-- Game paths -->
           <rect x="20" y="370" width="132" height="52" rx="8" fill="url(#panelGrad)" stroke="#ffb020" stroke-width="1.5"/>
           <text x="86" y="392" text-anchor="middle" fill="#ffb020" font-family="JetBrains Mono, monospace" font-size="11" font-weight="700">Java players</text>
@@ -226,11 +226,16 @@
     <!-- STACK -->
     <section id="stack" class="section">
       <h2 class="section-title reveal"><span class="hash">#</span> the stack</h2>
-      <p class="section-sub reveal">Docker on the OptiPlex 5040, with Fabric SMP on the same host. Caddy terminates TLS for LAN services under dobasmp.net.</p>
+      <p class="section-sub reveal">Docker on the OptiPlex 5040, with Fabric SMP on the same host. Caddy terminates TLS for LAN services under dobasmp.net. Mail is self-hosted too.</p>
       <div class="grid">
         <article class="card reveal">
+          <h3>Stalwart + Roundcube</h3>
+          <p>Self-hosted email on the OptiPlex: Stalwart for IMAP/SMTP with Let's Encrypt, Roundcube for webmail over a Cloudflare Tunnel. Phone Mail on cellular reaches home through Tailscale (exit node). Outbound relay keeps deliverability sane on a residential line.</p>
+          <div class="tags"><span>IMAP</span><span>SMTP</span><span>Webmail</span><span>Tailscale</span></div>
+        </article>
+        <article class="card reveal">
           <h3>AdGuard Home + Unbound</h3>
-          <p>I use AdGuard Home with Unbound for network-wide blocking and recursive DNS. Queries go to the root servers, not some upstream resolver.</p>
+          <p>I use AdGuard Home with Unbound for network-wide blocking and recursive DNS. Queries go to the root servers, not some upstream resolver. LAN rewrites keep mail and apps on the OptiPlex when I'm home.</p>
           <div class="tags"><span>DNS</span><span>Privacy</span><span>Unbound</span></div>
         </article>
         <article class="card reveal">
@@ -240,7 +245,7 @@
         </article>
         <article class="card reveal">
           <h3>Tailscale</h3>
-          <p>Tailscale mesh VPN with an exit node and MagicDNS. I can reach everything at home from anywhere without opening ports.</p>
+          <p>Tailscale mesh VPN with subnet routes, an exit node, and MagicDNS. I reach LAN services from anywhere without opening extra ports - including Mail on cellular when carriers block IMAP/SMTP.</p>
           <div class="tags"><span>WireGuard</span><span>Exit node</span><span>MagicDNS</span></div>
         </article>
         <article class="card reveal">
@@ -260,12 +265,12 @@
         </article>
         <article class="card reveal">
           <h3>Homepage</h3>
-          <p>LAN startpage for AdGuard, Maintenant, Nextcloud, Wazuh, Paperless, CrowdSec, OpenCanary, Minecraft map, and the rest.</p>
+          <p>LAN startpage for AdGuard, Maintenant, Mail, Nextcloud, Wazuh, Paperless, CrowdSec, OpenCanary, Minecraft map, and the rest.</p>
           <div class="tags"><span>Dashboard</span><span>LAN</span></div>
         </article>
         <article class="card reveal">
           <h3>Paperless-ngx</h3>
-          <p>Document OCR and archive. Cloudflare Email Routing drops mail into Gmail, then Paperless IMAP consumes and deletes after ingest.</p>
+          <p>Document OCR and archive. Ingests from IMAP and uploads; docs stay on the homelab next to Nextcloud and mail.</p>
           <div class="tags"><span>OCR</span><span>IMAP</span><span>Archive</span></div>
         </article>
         <article class="card reveal">
@@ -284,16 +289,16 @@
           <div class="tags"><span>IDS</span><span>Firewall</span><span>SSH</span><span>Caddy</span></div>
         </article>
         <article class="card reveal">
-        <article class="card reveal">
           <h3>OpenCanary</h3>
           <p>LAN honeypot (SSH, RDP, MySQL, Redis, FTP, Telnet, VNC, NAS login). Hits send ntfy alerts with source IP and service.</p>
           <div class="tags"><span>Honeypot</span><span>ntfy</span><span>Deception</span></div>
         </article>
+        <article class="card reveal">
           <h3>Restic backups</h3>
           <p>Nightly encrypted snapshots to the USB stick: stack configs, AdGuard, cron, plus PostgreSQL dumps for Nextcloud. Retention: 7 daily, 4 weekly, 2 monthly. This is disaster recovery for configs and DBs - not a full mirror of every file you upload.</p>
           <div class="tags"><span>Restic</span><span>USB</span><span>Cron</span></div>
         </article>
-<article class="card reveal">
+        <article class="card reveal">
           <h3>Fabric SMP</h3>
           <p>A modded Fabric server with Geyser for Bedrock cross-play. Java players hit TCPShield first so the home IP stays out of DNS, then playit tunnels TCP to the box. Bedrock goes through playit only. Maintenant and this site show online status and player count - no join info posted here.</p>
           <div class="tags"><span>Fabric</span><span>Geyser</span><span>TCPShield</span><span>playit</span></div>
@@ -388,7 +393,7 @@
       <div class="security-grid">
         <article class="card reveal">
           <h3>No inbound ports</h3>
-          <p>ISP blocks inbound anyway. Public site on Cloudflare Pages. Homelab services reach the internet only through outbound tunnels and Tailscale.</p>
+          <p>Portfolio stays on Cloudflare Pages with outbound tunnels for the live terminal. Mail MX and IMAP hit the house on purpose; everything else that needs a UI stays tunnel or Tailscale.</p>
           <div class="tags"><span>Edge access</span><span>Zero open ports</span></div>
         </article>
         <article class="card reveal">

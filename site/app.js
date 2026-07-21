@@ -5,7 +5,8 @@ const REFRESH_MS = 60000;
 // ---- typing effect ----
 const phrases = [
   "I run my own infra on a box at home, not in a cloud.",
-  "DNS, VPN, monitoring. All mine, running 24/7 in the house.",
+  "DNS, VPN, mail, monitoring. All mine, running 24/7 in the house.",
+  "Self-hosted email on bare metal. IMAP on the OptiPlex, webmail over a tunnel.",
   "I learn this stuff by actually running it, not just reading about it.",
 ];
 const typedEl = document.getElementById("typed");
