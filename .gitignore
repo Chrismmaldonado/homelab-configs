@@ -4,6 +4,14 @@ fix-history.sh
 PUSH.md
 fix-history.sh
 
+# secrets / live credentials
+**/.env
+!**/.env.example
+**/chris-wg.conf
+**/*.mobileconfig
+!**/*.mobileconfig.example
+site/ws-config.json
+
 # local backups and logs
 *.bak
 *.bak-*

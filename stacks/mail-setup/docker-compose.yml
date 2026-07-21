@@ -1,0 +1,9 @@
+services:
+  mail-setup:
+    image: nginx:alpine
+    container_name: mail-setup
+    restart: unless-stopped
+    ports:
+      - "127.0.0.1:3017:80"
+    volumes:
+      - ./www:/usr/share/nginx/html:ro

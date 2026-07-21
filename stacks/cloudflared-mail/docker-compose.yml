@@ -1,0 +1,9 @@
+services:
+  cloudflared-mail:
+    image: cloudflare/cloudflared:latest
+    container_name: cloudflared-mail
+    restart: unless-stopped
+    network_mode: host
+    command: tunnel --no-autoupdate run --token ${TUNNEL_TOKEN}
+    env_file:
+      - .env

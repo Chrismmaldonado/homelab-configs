@@ -10,13 +10,17 @@ No secrets, tokens, or live credentials. Domains appear as examples where needed
 |------|----------|
 | `stacks/` | Compose files per stack |
 | `stacks/core/` | AdGuard + Homepage |
+| `stacks/stalwart/` | Mail server (IMAP/SMTP) |
+| `stacks/roundcube/` | Webmail UI |
+| `stacks/cloudflared-mail/` | Cloudflare Tunnel for webmail |
+| `stacks/mail-setup/` | Profile hosting (examples only in git) |
 | `stacks/maintenant/` | Monitoring |
 | `stacks/opencanary/` | LAN honeypot + ntfy alerter |
 | `stacks/crowdsec/` | CrowdSec |
 | `caddy/` | Caddyfile example |
 | `homepage/` | Homepage config |
 | `scripts/` | Autostart, status sync, deploy, backup |
-| `site/` | Portfolio `index.html` snapshot |
+| `site/` | Portfolio snapshot for Cloudflare Pages |
 
 ## Stacks
 
@@ -32,8 +36,9 @@ No secrets, tokens, or live credentials. Domains appear as examples where needed
 | Paperless-ngx | Document OCR and archive |
 | SearXNG | Meta search |
 | ntfy | Push notifications |
-| Stalwart | Local IMAP/SMTP (mail storage and relay) |
-| Roundcube | Webmail UI at mail.dobasmp.net |
+| Stalwart | IMAP/SMTP; outbound relay optional |
+| Roundcube | Webmail at mail.dobasmp.net |
+| cloudflared-mail | Public webmail tunnel |
 | Homepage | LAN dashboard |
 | terminal-gateway | Read-only public shell over tunnel |
 | Restic | Nightly encrypted backups to USB |
@@ -42,9 +47,10 @@ No secrets, tokens, or live credentials. Domains appear as examples where needed
 
 - Dell OptiPlex 5040, i7-6700, 32 GB RAM, SSD
 - Ubuntu, Docker Compose
-- Public site on Cloudflare Pages; status from Maintenant via cron
-- No inbound ports required for the portfolio path (Pages + outbound tunnels)
+- Public site on Cloudflare Pages (`christopher-lab`); status from Maintenant via cron
+- Mail: `mx.dobasmp.net` for IMAP/SMTP; `mail.dobasmp.net` for webmail (tunnel)
+- Cellular Mail: Tailscale exit node to homelab (not committed; ops-only)
 
 ## Safety
 
-Do not commit `.env`, tokens, passwords, or private keys. Examples use placeholders only.
+Do not commit `.env`, tokens, passwords, private keys, or live WireGuard client configs.

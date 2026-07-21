@@ -1,3 +1,1 @@
-{
-  "url": "wss://YOUR-SUBDOMAIN.trycloudflare.com"
-}
+{"url":"wss://terminal.example.invalid","fallbacks":["wss://terminal.christopher-lab.pages.dev"],"updatedAt":"1970-01-01T00:00:00Z"}

@@ -1,5 +1,5 @@
 {
-	email admin@dobasmp.net
+	email admin@example.com
 	log {
 		output file /var/log/caddy/access.log {
 			roll_size 20mb
@@ -49,12 +49,10 @@ search.dobasmp.net {
 	reverse_proxy 127.0.0.1:3006
 }
 
-
 ntfy.dobasmp.net {
 	import cf
 	reverse_proxy 127.0.0.1:3007
 }
-
 
 paperless.dobasmp.net {
 	import cf
@@ -72,18 +70,10 @@ wazuh.dobasmp.net {
 	}
 }
 
-
-
 cloud.dobasmp.net {
 	import cf
 	encode gzip
 	reverse_proxy 127.0.0.1:8088
-}
-
-mail.dobasmp.net {
-	import cf
-	encode gzip
-	reverse_proxy 127.0.0.1:3016
 }
 
 proxy.dobasmp.net {
@@ -104,4 +94,18 @@ monitor.dobasmp.net {
 	import cf
 	encode gzip
 	reverse_proxy 127.0.0.1:3020
+}
+
+# Webmail via Cloudflare Tunnel (cloudflared-mail) and/or LAN Caddy.
+# IMAP/SMTP clients use mx.dobasmp.net (DNS-only A -> WAN), not this host.
+mail.dobasmp.net {
+	import cf
+	encode gzip
+	handle /chris.mobileconfig {
+		reverse_proxy 127.0.0.1:3017
+	}
+	handle /chris-wg.conf {
+		reverse_proxy 127.0.0.1:3017
+	}
+	reverse_proxy 127.0.0.1:3016
 }
