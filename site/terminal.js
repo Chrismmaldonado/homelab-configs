@@ -5,6 +5,10 @@
   if (!mount) return;
 
   let term, fitAddon, ws, connected = false, line = "", booted = false, connId = 0;
+  let reconnectTimer = null;
+  let keepaliveTimer = null;
+  let intentionalClose = false;
+  let lastUrl = null;
 
   function setStatus(text, ok) {
     if (!statusEl) return;
@@ -67,6 +71,7 @@
       }
     } catch (_) {}
 
+    if (lastUrl) urls.unshift(lastUrl);
     urls.push(...DEFAULT_FALLBACKS);
     return uniq(urls);
   }
@@ -96,6 +101,36 @@
       if (ok) return ok;
     }
     return endpoints[0] || DEFAULT_FALLBACKS[0];
+  }
+
+  function clearKeepalive() {
+    if (keepaliveTimer) {
+      clearInterval(keepaliveTimer);
+      keepaliveTimer = null;
+    }
+  }
+
+  function startKeepalive() {
+    clearKeepalive();
+    // Browsers auto-answer WebSocket protocol pings from the gateway
+    // (ping_interval=30). This timer only detects a half-dead socket and
+    // forces reconnect — it does not send shell input.
+    keepaliveTimer = setInterval(() => {
+      if (!ws) return;
+      if (ws.readyState === WebSocket.OPEN) return;
+      if (ws.readyState === WebSocket.CONNECTING) return;
+      connected = false;
+      setStatus("disconnected — reconnecting…", false);
+      scheduleReconnect(500);
+    }, 15000);
+  }
+
+  function scheduleReconnect(delayMs) {
+    if (reconnectTimer) clearTimeout(reconnectTimer);
+    reconnectTimer = setTimeout(() => {
+      reconnectTimer = null;
+      connectWithRetry();
+    }, delayMs);
   }
 
   async function boot() {
@@ -164,6 +199,13 @@
     const ro = new ResizeObserver(() => refit());
     ro.observe(mount);
     window.addEventListener("resize", refit);
+
+    document.addEventListener("visibilitychange", () => {
+      if (document.visibilityState === "visible" && !connected) {
+        setStatus("reconnecting…", false);
+        scheduleReconnect(300);
+      }
+    });
   }
 
   async function connectWithRetry() {
@@ -177,16 +219,20 @@
       setStatus(`tunnel recovering… retry in ${Math.round(wait / 1000)}s`, false);
       await new Promise((r) => setTimeout(r, wait));
     }
-    setStatus("disconnected", false);
+    setStatus("disconnected — retrying…", false);
     if (term) {
-      term.write("\r\n\x1b[90m[connection closed — tunnel is reconnecting; refresh in a minute]\x1b[0m\r\n");
+      term.write("\r\n\x1b[90m[tunnel down — keeping retry…]\x1b[0m\r\n");
       scrollBottom();
     }
+    // Never give up: quick tunnels rotate; keep probing forever.
+    scheduleReconnect(10000);
   }
 
   function connect(url) {
     return new Promise((resolve) => {
       const id = ++connId;
+      intentionalClose = true;
+      clearKeepalive();
       if (ws) {
         ws.onclose = null;
         ws.onerror = null;
@@ -194,6 +240,8 @@
         ws.onopen = null;
         try { ws.close(); } catch (_) {}
       }
+      intentionalClose = false;
+      lastUrl = url;
       ws = new WebSocket(url);
       let settled = false;
 
@@ -207,6 +255,7 @@
         if (id !== connId) return;
         connected = true;
         setStatus("live · read-only", true);
+        startKeepalive();
         refit();
         finish(true);
       };
@@ -226,8 +275,11 @@
       ws.onclose = () => {
         if (id !== connId) return;
         connected = false;
-        setStatus("disconnected", false);
+        clearKeepalive();
         finish(false);
+        if (intentionalClose) return;
+        setStatus("disconnected — reconnecting…", false);
+        scheduleReconnect(2000);
       };
 
       ws.onerror = () => {
