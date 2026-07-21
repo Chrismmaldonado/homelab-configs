@@ -42,11 +42,6 @@ echo "=== reload caddy ==="
 ( cd "$PROXY" && sudo docker compose exec -T caddy caddy reload --config /etc/caddy/Caddyfile ) \
   || ( cd "$PROXY" && sudo docker compose restart caddy )
 
-if docker ps --format '{{.Names}}' | grep -qx snappymail; then
-  echo "=== stop snappymail (replaced by roundcube) ==="
-  ( cd /opt/stacks/snappymail 2>/dev/null && sudo docker compose stop ) || docker stop snappymail
-fi
-
 echo "=== health ==="
 curl -fsS -o /dev/null -w 'roundcube local: %{http_code}\n' http://127.0.0.1:3016/ || true
 curl -fsSk -o /dev/null -w 'mail.dobasmp.net: %{http_code}\n' https://mail.dobasmp.net/ || true
