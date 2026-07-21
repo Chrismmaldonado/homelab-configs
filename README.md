@@ -32,6 +32,8 @@ No secrets, tokens, or live credentials. Domains appear as examples where needed
 | Paperless-ngx | Document OCR and archive |
 | SearXNG | Meta search |
 | ntfy | Push notifications |
+| Stalwart | Local IMAP/SMTP (mail storage and relay) |
+| Roundcube | Webmail UI at mail.dobasmp.net |
 | Homepage | LAN dashboard |
 | terminal-gateway | Read-only public shell over tunnel |
 | Restic | Nightly encrypted backups to USB |

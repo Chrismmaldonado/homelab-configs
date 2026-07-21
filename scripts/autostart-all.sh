@@ -27,6 +27,8 @@ up() {
 
 up /opt/stacks                                          # adguard, homepage
 up /opt/stacks/proxy                                    # caddy (reverse proxy / TLS)
+up /opt/stacks/stalwart                                 # local MTA (IMAP/SMTP)
+up /opt/stacks/roundcube                                # webmail UI
 up /opt/stacks/searxng                                  # searxng
 up /opt/stacks/terminal-gateway                         # terminal-gateway (read-only public shell)
 # cloudflared-terminal: start existing container

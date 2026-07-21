@@ -30,6 +30,12 @@
         icon: nextcloud.png
         server: my-docker
         container: nextcloud
+    - Mail:
+        href: https://mail.dobasmp.net
+        description: Webmail (Roundcube)
+        icon: mdi-email
+        server: my-docker
+        container: roundcube
     - Paperless:
         href: https://paperless.dobasmp.net
         description: Document archive

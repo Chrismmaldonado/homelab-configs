@@ -80,6 +80,12 @@ cloud.dobasmp.net {
 	reverse_proxy 127.0.0.1:8088
 }
 
+mail.dobasmp.net {
+	import cf
+	encode gzip
+	reverse_proxy 127.0.0.1:3016
+}
+
 proxy.dobasmp.net {
 	import cf
 	encode gzip
