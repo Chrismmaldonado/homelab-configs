@@ -1,0 +1,28 @@
+services:
+  roundcube:
+    image: roundcube/roundcubemail:latest
+    container_name: roundcube
+    restart: unless-stopped
+    ports:
+      - "127.0.0.1:3016:80"
+    extra_hosts:
+      - "host.docker.internal:host-gateway"
+    environment:
+      TZ: America/Chicago
+      ROUNDCUBEMAIL_DEFAULT_HOST: ssl://host.docker.internal
+      ROUNDCUBEMAIL_DEFAULT_PORT: 993
+      ROUNDCUBEMAIL_SMTP_SERVER: tls://host.docker.internal
+      ROUNDCUBEMAIL_SMTP_PORT: 465
+      ROUNDCUBEMAIL_UPLOAD_MAX_FILESIZE: 25M
+      ROUNDCUBEMAIL_SKIN: elastic
+    volumes:
+      - roundcube-data:/var/roundcube
+      - ./config/custom.inc.php:/var/roundcube/config/custom.inc.php:ro
+    labels:
+      maintenant.group: "mail"
+      maintenant.endpoint.0.http: "http://127.0.0.1:3016"
+      maintenant.endpoint.0.interval: "60s"
+      maintenant.endpoint.0.http.expected-status: "200,301,302,401,403"
+
+volumes:
+  roundcube-data:

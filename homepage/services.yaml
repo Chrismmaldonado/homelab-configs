@@ -30,6 +30,12 @@
         icon: nextcloud.png
         server: my-docker
         container: nextcloud
+    - Mail:
+        href: https://mail.dobasmp.net
+        description: Webmail (Roundcube)
+        icon: mdi-email
+        server: my-docker
+        container: roundcube
     - Paperless:
         href: https://paperless.dobasmp.net
         description: Document archive
@@ -37,13 +43,17 @@
         server: my-docker
         container: paperless
     - Minecraft:
-        href: https://map.dobasmp.net
-        description: DoBASMP server
+        href: https://panel.dobasmp.net
+        description: DoBASMP Fabric via Pterodactyl
         icon: minecraft.png
-    - BlueMap:
-        href: https://map.dobasmp.net
-        description: Live world map
-        icon: mdi-map
+        server: my-docker
+        container: pterodactyl-wings
+    - Pterodactyl:
+        href: https://panel.dobasmp.net
+        description: Game server panel
+        icon: mdi-server
+        server: my-docker
+        container: pterodactyl-panel
 
 - Background Services:
     - AdGuard:

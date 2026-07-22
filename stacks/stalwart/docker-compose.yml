@@ -1,0 +1,31 @@
+services:
+  stalwart:
+    image: stalwartlabs/stalwart:v0.16
+    container_name: stalwart
+    restart: unless-stopped
+    env_file:
+      - .env
+    ports:
+      - "25:25"
+      - "465:465"
+      - "587:587"
+      - "993:993"
+      - "5873:587"
+      - "4653:465"
+      - "9933:993"
+      - "9465:465"
+      - "9443:993"
+      - "127.0.0.1:8085:8080"
+    volumes:
+      - stalwart-etc:/etc/stalwart
+      - stalwart-data:/var/lib/stalwart
+    labels:
+      maintenant.group: "mail"
+      maintenant.endpoint.0.tcp: "127.0.0.1:993"
+      maintenant.endpoint.0.interval: "60s"
+      maintenant.endpoint.1.tcp: "127.0.0.1:25"
+      maintenant.endpoint.1.interval: "60s"
+
+volumes:
+  stalwart-etc:
+  stalwart-data:

@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+<dict>
+  <key>PayloadContent</key>
+  <array>
+    <dict>
+      <key>EmailAccountDescription</key><string>dobasmp Mail</string>
+      <key>EmailAccountName</key><string>chris@dobasmp.net</string>
+      <key>EmailAccountType</key><string>EmailTypeIMAP</string>
+      <key>EmailAddress</key><string>chris@dobasmp.net</string>
+      <key>IncomingMailServerAuthentication</key><string>EmailAuthPassword</string>
+      <key>IncomingMailServerHostName</key><string>mx.dobasmp.net</string>
+      <key>IncomingMailServerPortNumber</key><integer>993</integer>
+      <key>IncomingMailServerUseSSL</key><true/>
+      <key>IncomingMailServerUsername</key><string>chris@dobasmp.net</string>
+      <key>OutgoingMailServerAuthentication</key><string>EmailAuthPassword</string>
+      <key>OutgoingMailServerHostName</key><string>mx.dobasmp.net</string>
+      <key>OutgoingMailServerPortNumber</key><integer>465</integer>
+      <key>OutgoingMailServerUseSSL</key><true/>
+      <key>OutgoingMailServerUsername</key><string>chris@dobasmp.net</string>
+      <key>PayloadDescription</key><string>Mail via VPN or WiFi</string>
+      <key>PayloadDisplayName</key><string>dobasmp Mail</string>
+      <key>PayloadIdentifier</key><string>net.dobasmp.mail.chris</string>
+      <key>PayloadType</key><string>com.apple.mail.managed</string>
+      <key>PayloadUUID</key><string>00000000-0000-0000-0000-000000000001</string>
+      <key>PayloadVersion</key><integer>1</integer>
+    </dict>
+  </array>
+  <key>PayloadDisplayName</key><string>dobasmp Mail (VPN/WiFi)</string>
+  <key>PayloadIdentifier</key><string>net.dobasmp.mail.profile</string>
+  <key>PayloadType</key><string>Configuration</string>
+  <key>PayloadUUID</key><string>00000000-0000-0000-0000-000000000002</string>
+  <key>PayloadVersion</key><integer>1</integer>
+</dict>
+</plist>

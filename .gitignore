@@ -4,6 +4,19 @@ fix-history.sh
 PUSH.md
 fix-history.sh
 
+# secrets / live credentials
+**/.env
+!**/.env.example
+**/chris-wg.conf
+**/*.mobileconfig
+!**/*.mobileconfig.example
+site/ws-config.json
+stacks/pterodactyl/.panel-admin.env
+stacks/pterodactyl/.api-token
+stacks/pterodactyl/.server-uuid
+stacks/pterodactyl/.server-id
+stacks/pterodactyl/data/
+
 # local backups and logs
 *.bak
 *.bak-*
