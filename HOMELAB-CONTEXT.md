@@ -16,6 +16,21 @@ Stacks: `/opt/stacks`. Public portfolio: [christopher.isageek.net](https://chris
 
 Do not commit Stalwart `.env`, tunnel tokens, WireGuard private keys, or password-bearing mobileconfigs.
 
+## WAN port forwards (router) — keep minimal
+
+Forward **only** these to `192.168.1.213`:
+
+| Port | Service |
+|------|---------|
+| 25, 465, 587, 993 | Stalwart mail |
+| 25565 | Minecraft (Pterodactyl / Wings) |
+
+Do **not** forward: 25575 (RCON — localhost only on host), 8085 (Stalwart admin), 4653/5873/9933/9443/9465 (removed), Homepage/Nextcloud/panel/etc. (localhost + Caddy/tunnels).
+
+Minecraft admin UI: `https://panel.dobasmp.net` (Pterodactyl). Wings API: `https://wings.dobasmp.net`. Game data under `/var/lib/pterodactyl/volumes/<uuid>/` (legacy tree kept at `/opt/minecraft`).
+
+Host applies `homelab-harden-fw.service` on boot (RCON lock + mail SYN rate limits). Stalwart has built-in auth auto-ban.
+
 ## Public site
 
 | Path | Role |

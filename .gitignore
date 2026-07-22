@@ -11,6 +11,11 @@ fix-history.sh
 **/*.mobileconfig
 !**/*.mobileconfig.example
 site/ws-config.json
+stacks/pterodactyl/.panel-admin.env
+stacks/pterodactyl/.api-token
+stacks/pterodactyl/.server-uuid
+stacks/pterodactyl/.server-id
+stacks/pterodactyl/data/
 
 # local backups and logs
 *.bak

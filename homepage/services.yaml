@@ -43,8 +43,17 @@
         server: my-docker
         container: paperless
     - Minecraft:
-        description: DoBASMP Fabric server
+        href: https://panel.dobasmp.net
+        description: DoBASMP Fabric via Pterodactyl
         icon: minecraft.png
+        server: my-docker
+        container: pterodactyl-wings
+    - Pterodactyl:
+        href: https://panel.dobasmp.net
+        description: Game server panel
+        icon: mdi-server
+        server: my-docker
+        container: pterodactyl-panel
 
 - Background Services:
     - AdGuard:

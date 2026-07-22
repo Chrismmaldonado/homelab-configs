@@ -1,0 +1,40 @@
+services:
+  wings:
+    image: ghcr.io/pterodactyl/wings:latest
+    container_name: pterodactyl-wings
+    restart: unless-stopped
+    tty: true
+    networks:
+      - wings0
+    ports:
+      - "127.0.0.1:8091:8080"
+      - "2022:2022"
+    environment:
+      TZ: America/Chicago
+      WINGS_UID: 988
+      WINGS_GID: 988
+      WINGS_USERNAME: pterodactyl
+    volumes:
+      - /var/run/docker.sock:/var/run/docker.sock
+      - /var/lib/docker/containers/:/var/lib/docker/containers/
+      - /etc/pterodactyl/:/etc/pterodactyl/
+      - /var/lib/pterodactyl/:/var/lib/pterodactyl/
+      - /var/log/pterodactyl/:/var/log/pterodactyl/
+      - /tmp/pterodactyl/:/tmp/pterodactyl/
+      - /etc/ssl/certs:/etc/ssl/certs:ro
+      - /run/wings:/run/wings
+    labels:
+      maintenant.enable: "true"
+      maintenant.group: "game"
+      maintenant.name: "Pterodactyl Wings"
+      maintenant.update.ignore_major: "true"
+
+networks:
+  wings0:
+    name: wings0
+    driver: bridge
+    ipam:
+      config:
+        - subnet: 10.89.0.0/16
+    driver_opts:
+      com.docker.network.bridge.name: wings0
